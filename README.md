@@ -2,15 +2,18 @@
     
     **"Keys " is the tool to manage your passwords locally in your PC/laptop.**
       
-      writes users data in .psswd_manger/tmp/info.txt
+      writes users data in .psswd_manger/tmp/info.txt encrypted format AES-256-cbc
 
 **File format:**
-      <nickname>: <username/userid> <Password> <hits> <last-updated>
+
+      <nickname>:  <username/userid>  <Password>  <hits>  <last-updated>
 
 **exampe:**
-      anji: anjibabu480 newoneher "its my dummy password" "18.01.2021:19:59"
+
+      anji: <anjibabu480> <newoneher> <"its my dummy password"> <"18.01.2021:19:59">
 
 **Features :**
+
       keys or keys list
       This command should list the available nicknames
 
