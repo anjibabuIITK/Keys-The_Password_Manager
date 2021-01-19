@@ -1,0 +1,5 @@
+# Encrypt file with password secret
+openssl enc -aes-256-cbc -salt -k secret -in text.dat -out encrypted.dat
+
+# Decrypt file with password secret
+openssl enc -d -aes-256-cbc -salt -k secret -in encrypted.dat -out decrypted.dat
