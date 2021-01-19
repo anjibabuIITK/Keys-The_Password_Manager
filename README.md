@@ -35,8 +35,8 @@
       This command stores the user datails and sets master key
 
       keys --set_masterkey
-      This command sets or resets the master key when needed. user have to enter OTP sent to registred mail id.
-      User can't reset master if mail id is not registred.
+      This command sets or resets the master key when needed. user have to enter OTP sent
+      to registred mail id. User can't reset master if mail id is not registred.
 
 **Later updates: (Enable Security)**
 
