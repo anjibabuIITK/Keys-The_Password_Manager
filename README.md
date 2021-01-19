@@ -52,7 +52,7 @@
     2. man enc
 
 
-**TETUS of Prjoect:**
+**STATUS of the Prjoect:**
           
       Work is under progress
 
