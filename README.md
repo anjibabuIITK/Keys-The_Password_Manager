@@ -1,7 +1,11 @@
 ##                  Keys  
 
 
-Th Password Manager written in shell/bash.
+The Password Manager written in shell/bash.
+
+**STATUS:**
+
+    UNDER PROGRESS
     
     
  **Description:**
