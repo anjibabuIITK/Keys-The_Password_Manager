@@ -1,4 +1,4 @@
-## <=============================== Keys ================================>
+## <======================= Keys ========================>
 
 The Password Manager written in shell/bash.
  
@@ -26,7 +26,7 @@ The Password Manager written in shell/bash.
 
 **USAGE:**
 
-    keys <command> [-ne],[-ue],[-h],[-re],[--set-profile],[--set-masterkey]
+    keys <command> [-ne],[-ue],[-h],[-re],[--set-profile],[--set-masterkey],[-v]
 
 **Features :**
 
@@ -53,6 +53,9 @@ The Password Manager written in shell/bash.
     keys --reset-masterkey|-rmk
     This command resets the master key. User needs to be authenticate by typing OTP 
     sent to the regustred mail.
+    
+    keys -v|--version
+    Prints the current version of the code.
 
 
     ---
@@ -60,5 +63,5 @@ The Password Manager written in shell/bash.
     Anji Babu Kapakayala
     IIT Kanpur, India.
 
-## <=============================== Keys ================================>
+## <======================= Keys ========================>
    
