@@ -8,7 +8,7 @@ echo " Keys: toilet -----> Found."
 else
 #apt-get -y install toilet
 #echo " Keys: toilet has been installed."
-echo " Keys: toilet -----> Not found."
+echo " Keys: toilet -----> Not found.";exit
 fi
 }
 #-------------------------------------------------#
@@ -20,7 +20,8 @@ echo " Keys: mutt -----> Found."
 else
 #apt-get -y install mutt
 #echo " Keys: mutt has been installed."
-echo " Keys: mutt -----> Not found. [ Istall mutt for reciving OTP service ]"
+echo " Keys: [ERROR] mutt -----> Not found. [ Istall mutt for reciving OTP service ]"
+exit
 fi
 }
 #-------------------------------------------------#
@@ -31,7 +32,7 @@ echo " Keys: sed -----> Found."
 else
 #apt-get -y install sed
 #echo " Keys: sed has been installed."
-echo " Keys: sed -----> Not found."
+echo " Keys: [ERROR] sed -----> Not found.";exit
 fi
 #
 c=`which awk`
@@ -40,7 +41,7 @@ echo " Keys: awk -----> Found."
 else
 #apt-get -y install awk
 #echo " Keys: awk has been installed."
-echo " Keys: awk -----> Not found."
+echo " Keys: [ERROR] awk -----> Not found.";exit
 fi
 #
 d=`which notify-send`
@@ -49,7 +50,7 @@ echo " Keys: notify-send -----> Found."
 else
 #apt-get -y install notify-send
 #echo " Keys: send-notify has been installed."
-echo " Keys: notify-send -----> Not found."
+echo " Keys: [warning] notify-send -----> Not found."
 fi
 #
 d=`which grep`
@@ -58,7 +59,16 @@ echo " Keys: grep -----> Found."
 else
 #apt-get -y install grep
 #echo " Keys: grep has been installed."
-echo " Keys: grep -----> Not found."
+echo " Keys: [Error] grep -----> Not found.";exit
+fi
+#
+d=`which openssl`
+if [ "$?" == "0" ];then
+echo " Keys: openssl -----> Found."
+else
+#apt-get -y install grep
+#echo " Keys: grep has been installed."
+echo " Keys: [Error] openssl -----> Not found. [Please install openssl]";exit
 fi
 #
 }
@@ -97,7 +107,8 @@ echo; echo "Access denied."
 function update_bashrc() {
 cat >> $HOME/.bashrc <<EOF
 # Keys (the password manager)
-export KEYS=\$KEYS:$install_dir/bin
+#export KEYS=\$KEYS:$install_dir/bin
+export PATH=\$PATH:$install_dir/bin #KEYS
 EOF
 echo " Keys: Updated the ~/.bashrc."
 }
@@ -105,9 +116,10 @@ echo " Keys: Updated the ~/.bashrc."
 function install_package() {
 install_dir=`pwd`
 install_path=$HOME/.keys/etc/path/install_path
+cp src/main1.sh .
+chmod 777 main1.sh
 mkdir bin
-cp src/main.sh bin/keys
-chmod 777 bin/keys
+mv main1.sh bin/keys
 cat > $install_path <<EOF
 $install_dir
 EOF
