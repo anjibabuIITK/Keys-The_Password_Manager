@@ -1,0 +1,16 @@
+0. Need to check the code for user details, if not set warn to set profile at beginning of the code.
+
+1. configure mutt and enable OTP sharing to mail. [ create a gmail id for keys. (keys.package@gmail.com) ]
+
+2.Mailing options:
+ 2.1. Should send a mail when accessing the code. and send OTP.
+ 2.2. Should send OTP to registered user when resetting masterkey. if user is not availble warn to set profile first.
+ 2.3. Enable recovery option during profile setting. and story it for future reference.
+      Add a case statement during resetting masterkey keys --recover-masterkey, it should prompt the question
+      which user has registered, and ask for answer. allow resetting masterkey,, if ans matches.
+      keys --sendme-masterkey
+      keys --recover-masterkey
+
+3.Color font needs to be enabled.
+  3.1 Make it print clean and neet output on screen.
+
