@@ -1,12 +1,13 @@
-##                  Keys  
-
+## <=========================== Keys =====================================>
 
 The Password Manager written in shell/bash.
-
-**STATUS:**
-
-    UNDER PROGRESS
+ 
+**Authour:**
     
+    Anji Babu Kapakayala
+    IIT Kanpur, India.
+    anjibabu480@gmail.com
+
     
  **Description:**
             
@@ -14,6 +15,14 @@ The Password Manager written in shell/bash.
     stores the passwords encrypted and locally, requiring the user to create a master password: 
     a single, ideally very strong password which grants the user access to their entire password 
     database. Keys protects the user data using the AES-256-cbc encryption with salted.
+    
+**INSTALL:**
+
+    bash installer.sh
+    
+**UN-INSTALL:**
+
+    bash installer.sh clean
 
 **USAGE:**
 
@@ -27,7 +36,7 @@ The Password Manager written in shell/bash.
     keys --help|-h
     This command prints the information about package.
 
-    keys --new_entry|-ne
+    keys --new-entry|-ne
     This command collects the details from the user from terminal. nickname is mandatory 
     to be unique. However, it will warns the user if nickname already exists.
 
@@ -38,10 +47,10 @@ The Password Manager written in shell/bash.
     This command updates the existed nickname. And warns if nickname doesn't existed.
     And suggests to use --new_entry command.
 
-    keys --set_profile
+    keys --set-profile|-sp
     This command sets the user datails and sets master key.
 
-    keys --set_masterkey
+    keys --reset-masterkey|-rmk
     This command resets the master key. User needs to be authenticate by typing OTP 
     sent to the regustred mail.
 
@@ -51,4 +60,5 @@ The Password Manager written in shell/bash.
     Anji Babu Kapakayala
     IIT Kanpur, India.
 
+## <=========================== Keys =====================================>
    
