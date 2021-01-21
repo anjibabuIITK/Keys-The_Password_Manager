@@ -1,4 +1,4 @@
-## <=========================== Keys =====================================>
+## <=============================== Keys ================================>
 
 The Password Manager written in shell/bash.
  
@@ -26,7 +26,7 @@ The Password Manager written in shell/bash.
 
 **USAGE:**
 
-    keys <command> [-ne],[-ue],[-h],[-re],[--set_profile],[--set_masterkey]
+    keys <command> [-ne],[-ue],[-h],[-re],[--set-profile],[--set-masterkey]
 
 **Features :**
 
@@ -60,5 +60,5 @@ The Password Manager written in shell/bash.
     Anji Babu Kapakayala
     IIT Kanpur, India.
 
-## <=========================== Keys =====================================>
+## <=============================== Keys ================================>
    
