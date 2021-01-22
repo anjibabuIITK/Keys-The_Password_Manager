@@ -22,6 +22,7 @@ bold=`tput bold`
 #Check .Password_Manager/etc/profile exists or not. if not create
 path=$HOME/.keys/etc/profile
 profile=$HOME/.keys/etc/profile/profile
+recovery=$HOME/.keys/etc/profile/recovery
 database=$HOME/.keys/etc/Database/database
 master_file=$HOME/.keys/etc/profile/masterkey
 install_file=$HOME/.keys/etc/path/install_path
@@ -30,8 +31,18 @@ install_file=$HOME/.keys/etc/path/install_path
 function print_welcome() {
 cat << EOF
 #------------------------------------------------------------#
-#   <=============== Welcome to Keys ===============>	     # 
+$bold $blu  <=============== $rst $bold $red Welcome to Keys$rst $bold $blu ===============>$rst
 #------------------------------------------------------------#
+
+EOF
+}
+#-------------------------------------------------#
+function header() {
+cat << EOF
+#------------------------------------------------------------#
+$bold $blu  <=============== $rst $bold $red Welcome to Keys$rst $bold $blu ===============>$rst
+#------------------------------------------------------------#
+ 		    $bold $ylw $@ $rst
 
 EOF
 }
@@ -62,10 +73,13 @@ ipath=`cat $install_file |awk '{print $1}'`
 }
 #-------------------------------------------------#
 function send_OTP() {
-OTP=$RANDOM
-#echo "$OTP"
-echo "OTP to access Keys package: $OTP"|mutt -s " OTP " $user_mail &
-#echo "OTP to access Keys package: $1"|mutt -s " OTP for access Keys" $user_mail &
+# otp_key =1; OTP service ON
+# otp_key =0; OTP service OFF
+ if [[ "$otp_key" == "1" ]];then
+    OTP=$RANDOM
+    echo "OTP to access Keys package: $OTP"|mutt -s " OTP " $user_mail &
+    #echo "OTP to access Keys package: $1"|mutt -s " OTP for access Keys" $user_mail &
+ fi
 }
 #---------------------------------------------#
 # function to get user registered email.
@@ -76,9 +90,46 @@ bash $ipath/src/encrypt.sh -de $profile
 user_name=`cat $profile |cut -d ":" -f1`
 user_mail=`cat $profile |cut -d ":" -f2`
 profile_key=`cat $profile |cut -d ":" -f4`
+otp_key=`cat $profile |cut -d ":" -f5`
 # Encrypt 
 bash $ipath/src/encrypt.sh -en $profile
 #echo "profile encrypted."
+}
+#-------------------------------------------------#
+# Enable OTP Service
+function enable_OTP_service() {
+ if [[ "$otp_key" == "1" ]];then
+echo;echo "OTP service is alredy enabled.";echo
+ else
+#<---
+    #decrypting the profile
+    bash $ipath/src/encrypt.sh -de $profile
+cat > $profile <<EOF
+ $usr_name:$usr_mail:$phone_nmbr:1:1
+EOF
+#encrypting the profile
+bash $ipath/src/encrypt.sh -en $profile
+#<--
+   echo;echo "OTP service is enabled.";echo
+fi
+}
+#-------------------------------------------------#
+# Disable OTP Service
+function disable_OTP_service() {
+ if [[ "$otp_key" == "0" ]];then
+   echo; echo "OTP service is alredy disabled."
+ else
+#<---
+    #decrypting the profile
+    bash $ipath/src/encrypt.sh -de $profile
+cat > $profile <<EOF
+ $usr_name:$usr_mail:$phone_nmbr:1:0
+EOF
+#encrypting the profile
+bash $ipath/src/encrypt.sh -en $profile
+#<--
+    echo;echo "OTP service is disabled.";echo
+fi
 }
 #-------------------------------------------------#
 # function to inform user when accessed the code
@@ -119,12 +170,18 @@ get_user_mail
 case "$@" in
    -h|--help)bash $ipath/src/help_page.sh;exit;;
    -v|--version)echo "Keys: version 1.0.0";exit;;
+--recover-masterkey)
+print_welcome
+bash $ipath/src/recover_masterkey.sh
+print_close;exit
+;;
 esac
 #-----> 
   if [[ "$profile_key" == "0" ]];then
      case "$@" in
         --set-profile|-sp) 
-	print_welcome
+#	print_welcome
+        header "User registration"
 	bash $ipath/src/set_user_profile.sh
         get_user_mail
         welcome_user
@@ -134,7 +191,8 @@ esac
 #<-----
 #if user mail acceble? if not, ask user to set profile first.
   if [[ "$profile_key" == "0" ]];then
-     echo "   <---------NOTICE------->"
+#     echo "   <---------NOTICE------->"
+     header " NOTICE  "
      echo "Keys: User has not been registered."
      echo "Keys: Regiter using --set-profile tag."
      echo "Keys: keys --set-profile";print_close;exit
@@ -174,7 +232,7 @@ exit
 fi
 done
 clear
-echo "Exit status from line:154";exit
+#echo "Exit status from line:154";exit
 #---------------------------------------------#
 #echo "Enter Master Key: "
 #read -s user_entered_key
@@ -196,6 +254,8 @@ bash $ipath/src/show_details.sh $nickname
 print_close
 else
 case "$@" in
+--enable-OTP)enable_OTP_service;;
+--disable-OTP)disable_OTP_service;;
 -ne|--new-entry)echo "New entry"
 bash $ipath/src/new_entry.sh;;
 -ue|--update-entry)echo "Update Entry"
@@ -214,6 +274,11 @@ print_welcome
 bash $ipath/src/set_user_profile.sh
 print_close
 ;;
+--update-profile)
+print_welcome
+bash $ipath/src/update_user_profile.sh
+print_close
+;;
 --reset-masterkey|-rmk)
 print_welcome
 bash $ipath/src/reset_masterkey.sh
@@ -227,7 +292,7 @@ esac
 fi
 
 # masterkey condirion
-else
-   echo "Entered wrong password." 
-   exit
-fi
+#else
+#   echo "Entered wrong password." 
+#   exit
+#fi

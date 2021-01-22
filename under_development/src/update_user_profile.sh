@@ -21,52 +21,60 @@ master_key=`cat $master_file |awk '{print $1}'`
 bash $ipath/src/encrypt.sh -en $master_file
 }
 #---------------------------------------------#
-function set_profile() {
-#----> Setting user profile
-echo;echo " User Registration: "
-read -p "Name : " usr_name
-read -p "Email: " usr_mail
-read -p "Phone Number:" phone_nmbr
+# function to get user registered email.
+function get_user_data() {
+# Decrypt 
+bash $ipath/src/encrypt.sh -de $profile
+#echo "profile decrypted."
+user_name=`cat $profile |cut -d ":" -f1`
+user_mail=`cat $profile |cut -d ":" -f2`
+user_phn=`cat $profile |cut -d ":" -f3`
+profile_key=`cat $profile |cut -d ":" -f4`
+otp_key=`cat $profile |cut -d ":" -f5`
+# Encrypt 
+bash $ipath/src/encrypt.sh -en $profile
+#echo "profile encrypted."
+}
+#-------------------------------------------------#
+function Print_present_data() {
+echo;echo "Current User Profile: "
+echo "Name  : " $user_name
+echo "Email : " $user_mail
+echo "Mobile:" $user_phn
 
-#--> Asking for OTP service
-read -p " Want to enable OTP service ?[yes/no]: " option1
-if [[ "$option1" == "yes" ]];then
-otp_key=1
-echo " OTP service has been enabled. "
-else
-otp_key=0
-echo " OTP service is desabled. "
-fi
-#<---
+}
+#-------------------------------------------------#
+function update_profile() {
+
+read -p " Are you sure to update profile? [yes/no]: " option
+#echo "$option"
+if [[ "$option" == "yes" ]];then
+#----> Setting user profile
+echo;echo " Updating user profile:";echo
+read -p "Name : " usr_name_new
+read -p "Email: " usr_mail_new
+read -p "Mobile:" phone_nmbr_new
+
 #decrypting the profile
 bash $ipath/src/encrypt.sh -de $profile
 cat > $profile <<EOF
- $usr_name:$usr_mail:$phone_nmbr:1:$otp_key
+ $usr_name_new:$usr_mail_new:$phone_nmbr_new:1:$otp_key
 EOF
 #encrypting the profile
 bash $ipath/src/encrypt.sh -en $profile
 #<--
-#----> Setting Masterkey
-read -p " Want to reset Master Key ?[yes/no]: " option
-#echo "$option"
-if [[ "$option" == "yes" ]];then
-echo " Resetting Master Key: "
-read -p "Enter Master key:" master_key
-#-->
-#decrypting the master_file
-bash $ipath/src/encrypt.sh -de $master_file
-cat > $master_file <<EOF
-$master_key
-EOF
-#encrypting the master_file
-bash $ipath/src/encrypt.sh -en $master_file
-#<--
+echo "Successfully updated the user profile"
 else
-echo " Master Key has not changed."
-echo " Default masterkey is 123456"
+echo "Choosed to be not to update profile.";exit
 fi
 echo""
+}
+#-------------------------------------------------#
+function reset_recovery_data() {
 #----> Recovery options
+read -p " Do you want to update recovery questions? [yes/no]: " option
+#echo "$option"
+if [[ "$option" == "yes" ]];then
 echo " Setting recovery Questions : " 
 Q1="What is your Date of Birth [dd-mm-yyyy] ?"
 #echo "$Q1"
@@ -75,23 +83,27 @@ Q2="What is your favorite place ?"
 read -p "What is your Date of Birth [dd-mm-yyyy] ?: " QA1
 read -p "What is your favorite place ?: " QA2
 #-->
-#decrypting the master_file
+#decrypting the recovery file
 bash $ipath/src/encrypt.sh -de $recovery
 cat > $recovery <<EOF
 1:$Q1:$QA1:$Q2:$QA2
 EOF
-#encrypting the master_file
+#encrypting the recovery file
 bash $ipath/src/encrypt.sh -en $recovery
 #<--
 echo " Recovery Questions has been updated."
+else
+echo " Recovery Questions has been not updated."
+fi
 }
 #---------------------------------------------#
 #   <==========MAIN CODE STARTS========>
 #---------------------------------------------#
-#get_master_key
-# Ask user to set profile
-set_profile
-echo;echo " User has been registered successfully. "
+get_user_data
+Print_present_data
+update_profile
+reset_recovery_data
+echo
 #---------------------------------------------#
 #  <===========ANJI BABU KAPAKAYALA=====>
 #---------------------------------------------#
