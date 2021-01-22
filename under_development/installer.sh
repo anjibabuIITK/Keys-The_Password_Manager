@@ -46,6 +46,7 @@ fi
 }
 #-------------------------------------------------#
 function check_dependencies() {
+#--->sed
 b=`which sed`
 if [ "$?" == "0" ];then
 echo " Keys: sed -----> Found."
@@ -54,7 +55,7 @@ else
 #echo " Keys: sed has been installed."
 echo " Keys: [ERROR] sed -----> Not found.";exit
 fi
-#
+#--->awk
 c=`which awk`
 if [ "$?" == "0" ];then
 echo " Keys: awk -----> Found."
@@ -63,7 +64,7 @@ else
 #echo " Keys: awk has been installed."
 echo " Keys: [ERROR] awk -----> Not found.";exit
 fi
-#
+#--->notify-send
 d=`which notify-send`
 if [ "$?" == "0" ];then
 echo " Keys: notify-send -----> Found."
@@ -72,7 +73,7 @@ else
 #echo " Keys: send-notify has been installed."
 echo " Keys: [warning] notify-send -----> Not found."
 fi
-#
+#--->grep
 d=`which grep`
 if [ "$?" == "0" ];then
 echo " Keys: grep -----> Found."
@@ -81,7 +82,16 @@ else
 #echo " Keys: grep has been installed."
 echo " Keys: [Error] grep -----> Not found.";exit
 fi
-#
+#--->cat
+d=`which cat`
+if [ "$?" == "0" ];then
+echo " Keys: cat -----> Found."
+else
+#apt-get -y install cat 
+#echo " Keys: cat has been installed."
+echo " Keys: [Error] cat -----> Not found.";exit
+fi
+#--->openssl
 d=`which openssl`
 if [ "$?" == "0" ];then
 echo " Keys: openssl -----> Found."
@@ -98,6 +108,7 @@ mkdir -p $HOME/.keys/etc/Database
 mkdir -p $HOME/.keys/etc/path
 mkdir -p $HOME/.keys/etc/profile
 profile=$HOME/.keys/etc/profile/profile
+recovery=$HOME/.keys/etc/profile/recovery
 database=$HOME/.keys/etc/Database/database
 install_path=$HOME/.keys/etc/path/install_path
 master_file=$HOME/.keys/etc/profile/masterkey
@@ -105,7 +116,7 @@ initial_key=123456
 #create empty profile and encrypt
 #touch $profile
 cat >$profile<<EOF
- :::0
+ :::0:0
 EOF
 bash src/encrypt.sh -en $profile
 cat >$database<<EOF
@@ -118,7 +129,15 @@ $initial_key
 EOF
 #encrypting masterkey
 bash src/encrypt.sh -en $master_file
-echo " Keys: Created required directories."
+#
+cat > $recovery <<EOF
+0::::
+EOF
+#encrypting recovery file
+bash src/encrypt.sh -en $recovery
+
+echo " Keys: Created database."
+echo " Keys: Created required directories and files"
 }
 #-----------------------------------------------------#
 function not_root_user() {
@@ -148,7 +167,7 @@ $install_dir
 EOF
 echo " Keys: Updated install path."
 
-echo " Keys: Installed the 'Keys' package."
+echo " Keys: Successfully installed the 'Keys' package. "
 }
 #-----------------------------------------------------#
 function uninstall() {
