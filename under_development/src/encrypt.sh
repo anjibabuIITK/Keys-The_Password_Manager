@@ -10,12 +10,14 @@ function encrypt() {
 # Encrypt file with password secret
 openssl enc -aes-256-cbc -salt -k secret -in $1 -out $1.key
 rm $1
+#chmod -R 777 $1.key
 }
 #--------------------------------------------------#
 function decrypt() {
 # Decrypt file with password secret
 openssl enc -d -aes-256-cbc -salt -k secret -in $1.key -out $1
 rm $1.key
+#chmod -R 777 $1
 }
 #--------------------------------------------------#
 case "$1" in
