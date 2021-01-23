@@ -2,15 +2,28 @@
 # This code is a part of Keys tool
 #---------------------------------------------#
 #!/bin/bash
+#---------------------------------------------------------------#
+#Check .Password_Manager/etc/profile exists or not. if not create
+#install_dir=`pwd`
+install_dir=${KEYS_INSTALL_DIR}
+key=${install_dir}/.keys
+profile=${install_dir}/.keys/etc/profile/profile
+recovery=${install_dir}/.keys/etc/profile/recovery
+database=${install_dir}/.keys/etc/Database/database
+install_path=${install_dir}/.keys/etc/path/install_path
+master_file=${install_dir}/.keys/etc/profile/masterkey
+ipath=`cat $install_path |awk '{print $1}'`
+[ -d $key ] ||mkdir -p $key
+#---------------------------------------------------------------#
 #---------------------------------------------#
-path=$HOME/.keys/etc/profile
-profile=$HOME/.keys/etc/profile/profile
-recovery=$HOME/.keys/etc/profile/recovery
-database=$HOME/.keys/etc/Database/database
-master_file=$HOME/.keys/etc/profile/masterkey
-install_file=$HOME/.keys/etc/path/install_path
-ipath=`cat $install_file |awk '{print $1}'`
-[ -d $path ] ||mkdir -p $path
+#path=$HOME/.keys/etc/profile
+#profile=$HOME/.keys/etc/profile/profile
+#recovery=$HOME/.keys/etc/profile/recovery
+#database=$HOME/.keys/etc/Database/database
+#master_file=$HOME/.keys/etc/profile/masterkey
+#install_file=$HOME/.keys/etc/path/install_path
+#ipath=`cat $install_file |awk '{print $1}'`
+#[ -d $path ] ||mkdir -p $path
 #---------------------------------------------#
 # When ever access this code ask for masterkey.
 function get_master_key() {

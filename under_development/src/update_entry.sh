@@ -1,12 +1,25 @@
 #!/bin/bash
+#---------------------------------------------------------------#
+#Check .Password_Manager/etc/profile exists or not. if not create
+#install_dir=`pwd`
+install_dir=${KEYS_INSTALL_DIR}
+key=${install_dir}/.keys
+profile=${install_dir}/.keys/etc/profile/profile
+recovery=${install_dir}/.keys/etc/profile/recovery
+database=${install_dir}/.keys/etc/Database/database
+install_path=${install_dir}/.keys/etc/path/install_path
+master_file=${install_dir}/.keys/etc/profile/masterkey
+ipath=`cat $install_path |awk '{print $1}'`
+[ -d $key ] ||mkdir -p $key
+#---------------------------------------------------------------#
 #---------------------------------------------#
-path=$HOME/.keys/etc/profile
-profile=$HOME/.keys/etc/profile/profile
-database=$HOME/.keys/etc/Database/database
-master_file=$HOME/.keys/etc/profile/masterkey
-install_file=$HOME/.keys/etc/path/install_path
-ipath=`cat $install_file |awk '{print $1}'`
-[ -d $path ] ||mkdir -p $path
+#path=$HOME/.keys/etc/profile
+#profile=$HOME/.keys/etc/profile/profile
+#database=$HOME/.keys/etc/Database/database
+#master_file=$HOME/.keys/etc/profile/masterkey
+#install_file=$HOME/.keys/etc/path/install_path
+#ipath=`cat $install_file |awk '{print $1}'`
+#[ -d $path ] ||mkdir -p $path
 #---------------------------------------------#
 function print_welcome() {
 cat << EOF
@@ -67,6 +80,8 @@ echo "$nickname updated successfully.";echo
 else
 echo ""
 echo "Nickname doesn't exist in database."
+# Encrypting the database
+bash $ipath/src/encrypt.sh -en $database
 echo ""
 fi
 

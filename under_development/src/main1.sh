@@ -18,15 +18,25 @@ pur=`tput setaf 5`
 rst=`tput sgr0`
 bold=`tput bold`
 #---------------------------------------------------------------#
-
 #Check .Password_Manager/etc/profile exists or not. if not create
-path=$HOME/.keys/etc/profile
-profile=$HOME/.keys/etc/profile/profile
-recovery=$HOME/.keys/etc/profile/recovery
-database=$HOME/.keys/etc/Database/database
-master_file=$HOME/.keys/etc/profile/masterkey
-install_file=$HOME/.keys/etc/path/install_path
-[ -d $path ] ||mkdir -p $path
+install_dir=${KEYS_INSTALL_DIR}
+key=${install_dir}/.keys
+profile=${install_dir}/.keys/etc/profile/profile
+recovery=${install_dir}/.keys/etc/profile/recovery
+database=${install_dir}/.keys/etc/Database/database
+install_path=${install_dir}/.keys/etc/path/install_path
+master_file=${install_dir}/.keys/etc/profile/masterkey
+ipath=`cat $install_path |awk '{print $1}'`
+[ -d $key ] ||mkdir -p $key
+#---------------------------------------------------------------#
+
+#path=$HOME/.keys/etc/profile
+#profile=$HOME/.keys/etc/profile/profile
+#recovery=$HOME/.keys/etc/profile/recovery
+#database=$HOME/.keys/etc/Database/database
+#master_file=$HOME/.keys/etc/profile/masterkey
+#install_file=$HOME/.keys/etc/path/install_path
+
 #---------------------------------------------#
 function print_welcome() {
 cat << EOF
@@ -75,7 +85,7 @@ bash $ipath/src/encrypt.sh -en $master_file
 # Access Installed directory 
 function get_install_dir() {
 #decrypt the file
-ipath=`cat $install_file |awk '{print $1}'`
+ipath=`cat $install_path |awk '{print $1}'`
 #enecrypt the file
 #echo "$ipath"
 }
@@ -168,9 +178,9 @@ rm tmp
 }
 #---------------------------------------------#
 function uninstall() {
-mv bin/keys src/keys.sh
-rm -rf ~/.keys
-rm -rf bin
+mv ${install_dir}/bin/keys ${install_dir}/src/keys.sh
+rm -rf ${install_dir}/.keys
+rm -rf ${install_dir}/bin
 sed -i "/KEYS/d" ~/.bashrc
 sed -i "/# Keys/d" ~/.bashrc
 echo " Keys: Unistalled the 'Keys' package."
