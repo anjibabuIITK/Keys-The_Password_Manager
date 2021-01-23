@@ -107,6 +107,7 @@ bash $ipath/src/encrypt.sh -de $profile
 #echo "profile decrypted."
 user_name=`cat $profile |cut -d ":" -f1`
 user_mail=`cat $profile |cut -d ":" -f2`
+user_phn=`cat $profile |cut -d ":" -f3`
 profile_key=`cat $profile |cut -d ":" -f4`
 otp_key=`cat $profile |cut -d ":" -f5`
 # Encrypt 
@@ -123,7 +124,7 @@ echo;echo "OTP service is alredy enabled.";echo
     #decrypting the profile
     bash $ipath/src/encrypt.sh -de $profile
 cat > $profile <<EOF
- $usr_name:$usr_mail:$phone_nmbr:1:1
+ $user_name:$user_mail:$user_phn:1:1
 EOF
 #encrypting the profile
 bash $ipath/src/encrypt.sh -en $profile
@@ -141,7 +142,7 @@ function disable_OTP_service() {
     #decrypting the profile
     bash $ipath/src/encrypt.sh -de $profile
 cat > $profile <<EOF
- $usr_name:$usr_mail:$phone_nmbr:1:0
+ $user_name:$user_mail:$user_phn:1:0
 EOF
 #encrypting the profile
 bash $ipath/src/encrypt.sh -en $profile
