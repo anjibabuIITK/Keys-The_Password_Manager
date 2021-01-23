@@ -44,9 +44,9 @@ fi
 #-------------------------------------------------#
 #    <=========== Main code ============>
 #-------------------------------------------------#
-
+while true;do
+echo
 last_updated=$(date +"%D ")
-
 #print_welcome
 while true;do
 read -p "Give  nickname:" nickname
@@ -67,7 +67,12 @@ EOF
 # Encrypt the database after using
 bash $ipath/src/encrypt.sh -en $database
 echo " Entry has been registred successfully."
+echo
 
+read -p " Want to add another entry? [yes/no] : " option
+[[ "$option" == "yes" ]] ||break
+
+done
 #print_close
 #-------------------------------------------------#
 # <==========Anji Babu Kapakayala===========>
