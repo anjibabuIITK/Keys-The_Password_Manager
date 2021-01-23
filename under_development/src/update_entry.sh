@@ -29,7 +29,7 @@ EOF
 #-------------------------------------------------#
 # Decrypt the database before using
 bash $ipath/src/encrypt.sh -de $database
-last_updated=`date`
+last_updated=$(date +"%D ")
 #print_welcome
 read -p "Give  nickname:" nickname
 a=`grep " $nickname:" $database`

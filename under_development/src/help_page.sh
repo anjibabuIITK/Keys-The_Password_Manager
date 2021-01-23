@@ -2,15 +2,10 @@
 # This code is a part of Keys tool
 #---------------------------------------------#
 #!/bin/bash
-#cho "#--------------------------------------------------------------------------------------#"
-#toilet --gay "Keys" 
-
-#cho "A tool to manasge your passwords at one place.  		"	
-#cho "#--------------------------------------------------------------------------------------#"
 cat << EOF
       <----------------------------------------------------------------------------->
-                                      KEYS
-		A tool to manasge your passwords at one place.  			
+                      <=========== WELCOME TO KEYS ==========>
+	           A tool to manasge your passwords at one place.  			
       <------------------------------------------------------------------------------>
  
      Install:
@@ -30,32 +25,35 @@ cat << EOF
                      
       Options :
 
-	keys or keys list
-	   This command prints the available nicknames to select.
+	keys 
+	   Shows the available nicknames and ask user to select nickname.
+	
+	keys list
+	   Prints the available nicknames and exit.
 
 	keys --help|-h
-	   This command prints the information about package.
+	   Prints the information about package and exit.
 
 	keys --new-entry|-ne
-	   This command collects the details from the user from terminal. nickname is 
-           mandatory to be unique. However, it will warns the user if nickname already
-           exists.
+	   Collects the details from the user and stores in database. nickname is
+	   mandatory to be unique. However, it will warns the user if nickname already
+	   exists.
 
-	keys --remove-entry|--delete-entry|-re
-	   This command removes the entry for given nickname.
+	keys --remove-entry|--delete-entry|-re|
+	   Removes the entry for given nickname from the database.
 
 	keys --update-entry|-ue
-	   This command updates the existed nickname. And warns if nickname doesn't
-           existed.And suggests to use --new_entry command.
+	   Updates the existed nickname. And warns if nickname doesn't existed. 
+	   And suggests to use --new_entry command.
 
 	keys --set-profile|-sp
-	   This command sets the user datails, master key and recovery questions.
+	   Register user profile and datails such as master key and recovery questions.
 
 	keys --reset-masterkey|-rmk
-	   This command resets the master key. User needs to be authenticate by typing OTP sent ti regustred mail.
+	   Resets the master key afer user authentication either OTP or previous masterkey.
 	
 	keys --recover-masterkey|-recover
-	   This command recovers the master key if, user answers correctly for registred recovery questions.
+	   Recovers the master key based on registred recovery questions.
 
 	Keys --version|-v
 	   Prints the current version of the code.
@@ -68,6 +66,9 @@ cat << EOF
 
 	Keys --update-profile
 	  Updates the user profile details including recovery options.
+	
+	Keys --uninstall|--clean
+	  Removes the all database and uninstalls the keys package.
 ---
 Master mind:
 Anji Babu Kapakayala

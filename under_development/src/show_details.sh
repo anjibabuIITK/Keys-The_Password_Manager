@@ -10,6 +10,11 @@ install_file=$HOME/.keys/etc/path/install_path
 ipath=`cat $install_file |awk '{print $1}'`
 [ -d $path ] ||mkdir -p $path
 #---------------------------------------------#
+# if user enter empty entry
+#--->
+if [ $# -eq 0 ] ;then
+exit
+else
 #decrypt database
 bash $ipath/src/encrypt.sh -de $database
 a=`grep " $1:" $database`
@@ -34,6 +39,7 @@ else
 echo "";echo " Not a valid nickname."
 exit
 fi
+fi #--->
 #---------------------------------------------#
 #  <========ANJI BABU KAPAKAYALA======>
 #---------------------------------------------#

@@ -25,26 +25,45 @@ cat << EOF
 EOF
 }
 #-------------------------------------------------#
-#    <=========== Main code ============>
-#-------------------------------------------------#
+# function to check nickname
+function Is_exist() {
 # Decrypt the database before using
 bash $ipath/src/encrypt.sh -de $database
-last_updated=`date`
+a=`grep " $1:" $database`
+if [ "$?" == "0" ];then
+echo " Keys: nickname already exist. Try other name."
+# Encrypt the database after using
+bash $ipath/src/encrypt.sh -en $database
+else
+echo " Keys: $1 ---> OK"
+# Encrypt the database after using
+bash $ipath/src/encrypt.sh -en $database
+break
+fi
+}
+#-------------------------------------------------#
+#    <=========== Main code ============>
+#-------------------------------------------------#
+
+last_updated=$(date +"%D ")
+
 #print_welcome
+while true;do
 read -p "Give  nickname:" nickname
+Is_exist $nickname
+done
+
 read -p "User ID/username: " username
-#echo " Password  :"
-#read -s password
 read -p "Password: " password
 read -p "Any hints :" hints
-#update last_update = $time
-echo "updated on = $last_updated"
+#echo "updated on = $last_updated"
 
+# Decrypt the database before using
+bash $ipath/src/encrypt.sh -de $database
 cat >> $database <<EOF
  $nickname:$username:$password:$hints:$last_updated
 
 EOF
-
 # Encrypt the database after using
 bash $ipath/src/encrypt.sh -en $database
 echo " Entry has been registred successfully."

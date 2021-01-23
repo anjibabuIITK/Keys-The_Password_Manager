@@ -54,6 +54,14 @@ cat << EOF
 EOF
 }
 #-------------------------------------------------#
+# Purpose: Display pause prompt
+# $1-> Message (optional)
+function pause() {
+local message="$@"
+[ -z $message ] && message="$bold $blu Press [Enter] key to continue...$rst"
+read -p "$message" readEnterKey
+}
+#-------------------------------------------------#
 # When ever access this code ask for masterkey.
 function get_master_key() {
 # Decrypt 
@@ -159,6 +167,16 @@ mutt -s " Welcome to Keys !!!" $user_mail < tmp &
 rm tmp
 }
 #---------------------------------------------#
+function uninstall() {
+mv bin/keys src/keys.sh
+rm -rf ~/.keys
+rm -rf bin
+sed -i "/KEYS/d" ~/.bashrc
+sed -i "/# Keys/d" ~/.bashrc
+echo " Keys: Unistalled the 'Keys' package."
+notify-send "Keys" "Keys has been uninstalled."
+}
+#-----------------------------------------------------#
 #  <===========MAIN CODE STARTS============>  #
 #---------------------------------------------#
 #print_welcome
@@ -170,7 +188,7 @@ get_user_mail
 case "$@" in
    -h|--help)bash $ipath/src/help_page.sh;exit;;
    -v|--version)echo "Keys: version 1.0.0";exit;;
---recover-masterkey)
+--recover-masterkey|--recover|-rc)
 print_welcome
 bash $ipath/src/recover_masterkey.sh
 print_close;exit
@@ -231,7 +249,6 @@ notify-send "ALERT" "Failed to Access Your Passwords"
 exit
 fi
 done
-clear
 #echo "Exit status from line:154";exit
 #---------------------------------------------#
 #echo "Enter Master Key: "
@@ -242,16 +259,21 @@ clear
 #echo "No of Arguments:$#"
 if [ $# -eq 0 ] ;then
 #echo " Arguments $#"
+while true;do
 print_welcome
 bash $ipath/src/list.sh
 print_close
+
 read -p "Enter nickname: " nickname
    case "$nickname" in
      q|exit|quit)exit;;
    esac
 #echo "You have selected $nickname"
 bash $ipath/src/show_details.sh $nickname
+pause
 print_close
+clear
+done
 else
 case "$@" in
 --enable-OTP)enable_OTP_service;;
@@ -286,6 +308,7 @@ print_close
 ;;
 --version|-v)
 echo "Keys version 1.0.0";;
+--uninstall|--clean)uninstall;;
 *)echo "Not a valid argument."
 
 esac
