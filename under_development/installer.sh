@@ -1,24 +1,59 @@
-# Configuration file to install password manager
+#---------------------------------------------------------------#
+#     <====================== KEYS ====================>
+#---------------------------------------------------------------#
+# "Keys" is a tool for managing your Passwords at one place.
+#
+# Authour: Anji Babu Kapakayala
+#          IIT Kanpur, India.
+#          anjibabu480@gmail.com
+# 
+#
+# Description:
+# This is a configuration file to install and setup environment for Keys.
+# This file can execute as root. It also attempt to install required 
+# dependencies.
+#
+#!/bin/bash
+#---------------------------------------------------------------#
+# Defining text colors
+red=`tput setaf 1`
+grn=`tput setaf 2`
+ylw=`tput setaf 3`
+blu=`tput setaf 4`
+pur=`tput setaf 5`
+rst=`tput sgr0`
+bold=`tput bold`
+#---------------------------------------------------------------#
 #!/bin/bash
 #-------------------------------------------------#
 function check_toilet() {
 a=`which toilet`
 if [ "$?" == "0" ];then
-echo " Keys: toilet -----> Found."
+echo "$bold $grn Keys$rst: toilet -----> Found."
 else
-#apt-get -y install toilet
-#echo " Keys: toilet has been installed."
-echo " Keys: toilet -----> Not found.";exit
+apt-get -y install toilet
+echo "$bold $grn Keys$rst: toilet has been installed."
+#echo " Keys: toilet -----> Not found.";exit
 fi
 }
 #-------------------------------------------------#
 function check_mutt() {
 b=`which mutt`
 if [ "$?" == "0" ];then
-echo " Keys: mutt -----> Found."
-#configure mutt
+echo "$bold $grn Keys$rst: mutt -----> Found."
+configure_mutt
 else
-#apt-get -y install mutt
+apt-get -y install mutt
+configure_mutt
+echo "$bold $grn Keys$rst: mutt has been installed."
+echo "$bold $grn Keys$rst: mutt has been configured."
+#echo " Keys: [ERROR] mutt -----> Not found. [ Istall mutt for reciving OTP service ]"
+#exit
+fi
+}
+#-------------------------------------------------#
+function configure_mutt() {
+mkdir -p $HOME/.mutt/cache
 cat > $HOME/.muttrc<<EOF
 # ------------------------------------------#
 #   <==============Keys=================>
@@ -39,72 +74,69 @@ set move = no
 set imap_keepalive = 900
 # ------------------------------------------#
 EOF
-#echo " Keys: mutt has been installed."
-echo " Keys: [ERROR] mutt -----> Not found. [ Istall mutt for reciving OTP service ]"
-exit
-fi
 }
 #-------------------------------------------------#
 function check_dependencies() {
 #--->sed
 b=`which sed`
 if [ "$?" == "0" ];then
-echo " Keys: sed -----> Found."
+echo "$bold $grn Keys$rst: sed -----> Found."
 else
-#apt-get -y install sed
-#echo " Keys: sed has been installed."
-echo " Keys: [ERROR] sed -----> Not found.";exit
+apt-get -y install sed
+echo "$bold $grn Keys$rst: sed has been installed."
+#echo " Keys: [ERROR] sed -----> Not found.";exit
 fi
 #--->awk
 c=`which awk`
 if [ "$?" == "0" ];then
-echo " Keys: awk -----> Found."
+echo "$bold $grn Keys$rst: awk -----> Found."
 else
-#apt-get -y install awk
-#echo " Keys: awk has been installed."
-echo " Keys: [ERROR] awk -----> Not found.";exit
+apt-get -y install awk
+echo "$bold $grn Keys$rst: awk has been installed."
+#echo " Keys: [ERROR] awk -----> Not found.";exit
 fi
 #--->notify-send
 d=`which notify-send`
 if [ "$?" == "0" ];then
-echo " Keys: notify-send -----> Found."
+echo "$bold $grn Keys$rst: notify-send -----> Found."
 else
-#apt-get -y install notify-send
-#echo " Keys: send-notify has been installed."
-echo " Keys: [warning] notify-send -----> Not found."
+apt-get -y install notify-send
+echo "$bold $grn Keys$rst: send-notify has been installed."
+#echo " Keys: [warning] notify-send -----> Not found."
 fi
 #--->grep
 d=`which grep`
 if [ "$?" == "0" ];then
-echo " Keys: grep -----> Found."
+echo "$bold $grn Keys$rst: grep -----> Found."
 else
-#apt-get -y install grep
-#echo " Keys: grep has been installed."
-echo " Keys: [Error] grep -----> Not found.";exit
+apt-get -y install grep
+echo "$bold $grn Keys$rst: grep has been installed."
+#echo " Keys: [Error] grep -----> Not found.";exit
 fi
 #--->cat
 d=`which cat`
 if [ "$?" == "0" ];then
-echo " Keys: cat -----> Found."
+echo "$bold $grn Keys$rst: cat -----> Found."
 else
-#apt-get -y install cat 
-#echo " Keys: cat has been installed."
-echo " Keys: [Error] cat -----> Not found.";exit
+apt-get -y install cat 
+echo "$bold $grn Keys$rst: cat has been installed."
+#echo " Keys: [Error] cat -----> Not found.";exit
 fi
 #--->openssl
 d=`which openssl`
 if [ "$?" == "0" ];then
-echo " Keys: openssl -----> Found."
+echo "$bold $grn Keys$rst: openssl -----> Found."
 else
-#apt-get -y install grep
-#echo " Keys: grep has been installed."
-echo " Keys: [Error] openssl -----> Not found. [Please install openssl]";exit
+apt-get -y install openssl
+echo "$bold $grn Keys$rst: openssl has been installed."
+#echo " Keys: [Error] openssl -----> Not found. [Please install openssl]";exit
 fi
 #
 }
 #-------------------------------------------------#
 function make_directories() {
 install_dir=`pwd`
+user=`pwd|cut -d "/" -f3`
 KEY="${install_dir}/.keys"
 etc="${install_dir}/.keys/etc"
 Database_d=${install_dir}/.keys/etc/Database
@@ -122,18 +154,7 @@ initial_key=123456
 mkdir -p $KEY $etc $Database_d $Profile_d $path_d
 touch $profile $recovery $database $install_path $master_file
 
-#---> Give permissions for Directories
-#chmod -R 777 $KEY
-#chmod -R 777 $etc
-#chmod -R 777 $Database_d
-#chmod -R 777 $Profile_d
-#chmod -R 777 $path_d
-#---> Give permissions for files
-#chmod -R 777 $profile
-#chmod -R 777 $recovery
-#chmod -R 777 $database
-#chmod -R 777 $install_path
-#chmod -R 777 $master_file
+
 #----->
 cat >$profile<<EOF
  :::0:0
@@ -158,13 +179,20 @@ EOF
 #encrypting recovery file
 bash src/encrypt.sh -en $recovery
 
-echo " Keys: Created database."
-echo " Keys: Created required directories and files"
+#---> Changing ownership to user
+chown -R $user:$user $KEY
+chown -R $user:$user $profile.key
+chown -R $user:$user $master_file.key
+chown -R $user:$user $recovery.key
+chown -R $user:$user $database.key
+chown -R $user:$user $install_path
+echo "$bold $grn Keys$rst: Created database."
+echo "$bold $grn Keys$rst: Created required directories and files"
 }
 #-----------------------------------------------------#
 function not_root_user() {
-echo; echo "Access denied."
- echo " Install as root user."
+echo; echo "$bold $red Access denied.$rst"
+ echo "$bold $red Install as root user.$rst"
  exit 
 }
 #-----------------------------------------------------#
@@ -174,7 +202,7 @@ cat >> $HOME/.bashrc <<EOF
 export KEYS_INSTALL_DIR=$install_dir
 export PATH=\$PATH:$install_dir/bin #KEYS
 EOF
-echo " Keys: Updated the ~/.bashrc."
+echo "$bold $grn Keys$rst: Updated the ~/.bashrc."
 }
 #-----------------------------------------------------#
 function install_package() {
@@ -187,9 +215,9 @@ mv main1.sh bin/keys
 cat > $install_path <<EOF
 $install_dir
 EOF
-echo " Keys: Updated install path."
+echo "$bold $grn Keys$rst: Updated install path."
 
-echo " Keys: Successfully installed the 'Keys' package. "
+echo "$bold $grn Keys$rst: Successfully installed the 'Keys' package. "
 }
 #-----------------------------------------------------#
 function uninstall() {
@@ -199,29 +227,29 @@ rm -rf ${install_dir}/.keys
 rm -rf bin
 sed -i "/KEYS/d" ~/.bashrc
 sed -i "/# Keys/d" ~/.bashrc
-echo " Keys: Unistalled the 'Keys' package."
+echo "$bold $red Keys$rst: Unistalled the 'Keys' package."
 }
 #-----------------------------------------------------#
 #   <=============MAIN CODE STARTS=============>
 #-----------------------------------------------------#
 root=`id -u`
 if [ $# -eq 0 ] ;then
-#if [ $root -eq 0 ]; then           
-  check_toilet
-  check_mutt
-  make_directories
-  check_dependencies
-  install_package
-  update_bashrc
-  notify-send "Keys" "Keys has been installed successfully."
-#else
-#not_root_user
-#fi
+   if [ $root -eq 0 ]; then           
+  	check_toilet
+  	check_mutt
+	make_directories
+  	check_dependencies
+  	install_package
+  	update_bashrc
+  	notify-send " Keys" "Keys has been installed successfully."
+    else
+	not_root_user
+    fi
 else
   case "$@" in
-  uninstall|clean)uninstall
+  uninstall|clean|cl)uninstall
   notify-send "Keys" "Keys has been uninstalled.";;
-  *)echo " Not a valid argument.";echo
+  *)echo "$bold $red Not a valid argument.$rst";echo
   esac
 fi
 #-----------------------------------------------------#
