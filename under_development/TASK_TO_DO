@@ -21,3 +21,4 @@
  5.2 keys --disable-OTP
 
 6. Entry data in a loop.
+7. Check for nickname while removing

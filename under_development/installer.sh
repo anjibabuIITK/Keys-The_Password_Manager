@@ -104,26 +104,48 @@ fi
 }
 #-------------------------------------------------#
 function make_directories() {
-mkdir -p $HOME/.keys/etc/Database
-mkdir -p $HOME/.keys/etc/path
-mkdir -p $HOME/.keys/etc/profile
-profile=$HOME/.keys/etc/profile/profile
-recovery=$HOME/.keys/etc/profile/recovery
-database=$HOME/.keys/etc/Database/database
-install_path=$HOME/.keys/etc/path/install_path
-master_file=$HOME/.keys/etc/profile/masterkey
+install_dir=`pwd`
+KEY="${install_dir}/.keys"
+etc="${install_dir}/.keys/etc"
+Database_d=${install_dir}/.keys/etc/Database
+Profile_d=${install_dir}/.keys/etc/profile
+path_d=${install_dir}/.keys/etc/path
+
+profile=${install_dir}/.keys/etc/profile/profile
+recovery=${install_dir}/.keys/etc/profile/recovery
+database=${install_dir}/.keys/etc/Database/database
+install_path=${install_dir}/.keys/etc/path/install_path
+master_file=${install_dir}/.keys/etc/profile/masterkey
 initial_key=123456
+
 #create empty profile and encrypt
-#touch $profile
+mkdir -p $KEY $etc $Database_d $Profile_d $path_d
+touch $profile $recovery $database $install_path $master_file
+
+#---> Give permissions for Directories
+#chmod -R 777 $KEY
+#chmod -R 777 $etc
+#chmod -R 777 $Database_d
+#chmod -R 777 $Profile_d
+#chmod -R 777 $path_d
+#---> Give permissions for files
+#chmod -R 777 $profile
+#chmod -R 777 $recovery
+#chmod -R 777 $database
+#chmod -R 777 $install_path
+#chmod -R 777 $master_file
+#----->
 cat >$profile<<EOF
  :::0:0
 EOF
 bash src/encrypt.sh -en $profile
+#----->
 cat >$database<<EOF
--NA-
+Press--->q-->to-exit.
 EOF
 #encrypting database
 bash src/encrypt.sh -en $database
+#--->
 cat > $master_file <<EOF
 $initial_key
 EOF
@@ -149,7 +171,7 @@ echo; echo "Access denied."
 function update_bashrc() {
 cat >> $HOME/.bashrc <<EOF
 # Keys (the password manager)
-#export KEYS=\$KEYS:$install_dir/bin
+export KEYS_INSTALL_DIR=$install_dir
 export PATH=\$PATH:$install_dir/bin #KEYS
 EOF
 echo " Keys: Updated the ~/.bashrc."
@@ -157,7 +179,7 @@ echo " Keys: Updated the ~/.bashrc."
 #-----------------------------------------------------#
 function install_package() {
 install_dir=`pwd`
-install_path=$HOME/.keys/etc/path/install_path
+install_path=${install_dir}/.keys/etc/path/install_path
 cp src/main1.sh .
 chmod 777 main1.sh
 mkdir bin
@@ -171,8 +193,9 @@ echo " Keys: Successfully installed the 'Keys' package. "
 }
 #-----------------------------------------------------#
 function uninstall() {
+install_dir=`pwd`
 mv bin/keys src/keys.sh
-rm -rf ~/.keys
+rm -rf ${install_dir}/.keys
 rm -rf bin
 sed -i "/KEYS/d" ~/.bashrc
 sed -i "/# Keys/d" ~/.bashrc
