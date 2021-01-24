@@ -60,10 +60,10 @@ EOF
 bash $ipath/src/encrypt.sh -en $profile
 #<--
 #----> Setting Masterkey
-read -p " Want to reset Master Key ?[yes/no]: " option
+read -p " Set Master Key ?[yes/no]: " option
 #echo "$option"
 if [[ "$option" == "yes" ]];then
-echo " Resetting Master Key: "
+echo " Setting the Master Key: "
 read -p "Enter Master key:" master_key
 #-->
 #decrypting the master_file
@@ -75,7 +75,7 @@ EOF
 bash $ipath/src/encrypt.sh -en $master_file
 #<--
 else
-echo " Master Key has not changed."
+echo " Master Key has been set to default."
 echo " Default masterkey is 123456"
 fi
 echo""
@@ -103,8 +103,14 @@ echo " Recovery Questions has been updated."
 #---------------------------------------------#
 #get_master_key
 # Ask user to set profile
+if [[ "$1" == "0" ]];then
 set_profile
 echo;echo " User has been registered successfully. "
+else
+echo " User already registred."
+echo " Use keys --update-profile to update"
+echo""
+fi
 #---------------------------------------------#
 #  <===========ANJI BABU KAPAKAYALA=====>
 #---------------------------------------------#

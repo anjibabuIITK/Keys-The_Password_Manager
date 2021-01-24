@@ -178,6 +178,27 @@ mutt -s " Welcome to Keys !!!" $user_mail < tmp &
 rm tmp
 }
 #---------------------------------------------#
+# function to inform user when updated the profile
+function update_user() {
+time=`date`
+get_master_key
+cat >> tmp << EOF
+Hi $user_name,
+
+you have succesfully updated your profile with keys package.
+It is recomended the user to remember the master key for accessing the password
+database at off network times. 
+
+Your masterkey: $master_key
+
+Cheers!
+Team,
+Keys.
+EOF
+mutt -s " Profile updated !!!" $user_mail < tmp &
+rm tmp
+}
+#---------------------------------------------#
 function uninstall() {
 mv ${install_dir}/bin/keys ${install_dir}/src/keys.sh
 rm -rf ${install_dir}/.keys
@@ -211,7 +232,7 @@ esac
         --set-profile|-sp) 
 #	print_welcome
         header "User registration"
-	bash $ipath/src/set_user_profile.sh
+	bash $ipath/src/set_user_profile.sh $profile_key
         get_user_mail
         welcome_user
 	print_close;exit;; #mail user
@@ -286,7 +307,11 @@ print_close
 clear
 done
 else
-case "$@" in
+case "$1" in
+--nickname|-n)
+print_welcome
+bash $ipath/src/show_details.sh $2
+print_close;;
 --enable-OTP)enable_OTP_service;;
 --disable-OTP)disable_OTP_service;;
 -ne|--new-entry)echo "New entry"
@@ -304,12 +329,13 @@ print_close
 bash $ipath/src/remove_entry.sh;;
 --set-profile|-sp)
 print_welcome
-bash $ipath/src/set_user_profile.sh
+bash $ipath/src/set_user_profile.sh $profilekey
 print_close
 ;;
 --update-profile)
 print_welcome
 bash $ipath/src/update_user_profile.sh
+update_user
 print_close
 ;;
 --reset-masterkey|-rmk)
