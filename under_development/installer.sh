@@ -1,7 +1,7 @@
 #---------------------------------------------------------------#
 #     <====================== KEYS ====================>
 #---------------------------------------------------------------#
-# "Keys" is a tool for managing your Passwords at one place.
+# "Keys" is the tool for managing your Passwords at one place.
 #
 # Authour: Anji Babu Kapakayala
 #          IIT Kanpur, India.
@@ -233,8 +233,8 @@ echo "$bold $red Keys$rst: Unistalled the 'Keys' package."
 #   <=============MAIN CODE STARTS=============>
 #-----------------------------------------------------#
 root=`id -u`
-if [ $# -eq 0 ] ;then
-   if [ $root -eq 0 ]; then           
+if [ $root -eq 0 ]; then           
+   if [ $# -eq 0 ] ;then
   	check_toilet
   	check_mutt
 	make_directories
@@ -242,15 +242,15 @@ if [ $# -eq 0 ] ;then
   	install_package
   	update_bashrc
   	notify-send " Keys" "Keys has been installed successfully."
-    else
-	not_root_user
-    fi
+   else
+      case "$@" in
+      uninstall|clean|cl)uninstall
+      notify-send "Keys" "Keys has been uninstalled.";;
+      *)echo "$bold $red Not a valid argument.$rst";echo
+      esac
+   fi
 else
-  case "$@" in
-  uninstall|clean|cl)uninstall
-  notify-send "Keys" "Keys has been uninstalled.";;
-  *)echo "$bold $red Not a valid argument.$rst";echo
-  esac
+ not_root_user
 fi
 #-----------------------------------------------------#
 #   <===========Anji Babu Kapakayala============>
