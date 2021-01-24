@@ -22,3 +22,4 @@
 
 6. Entry data in a loop.
 7. Check for nickname while removing
+8. check profilekey, if user setting profile again, print already exisst. --set-user-profile

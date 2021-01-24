@@ -1,0 +1,8 @@
+# install
+sudo ./install
+
+#uninstall
+sudo ./install clean
+
+# uninstall through keys
+keys --uninnstall
