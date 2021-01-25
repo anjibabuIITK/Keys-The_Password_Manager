@@ -29,10 +29,10 @@ ipath=`cat $install_path |awk '{print $1}'`
 # When ever access this code ask for masterkey.
 function get_master_key() {
 #decrypting the masterkey
-bash $ipath/src/encrypt.sh -de $master_file
+bash $ipath/src/encrypt.sh -dm $master_file
 master_key=`cat $master_file |awk '{print $1}'`
 #enecrypting the masterkey
-bash $ipath/src/encrypt.sh -en $master_file
+bash $ipath/src/encrypt.sh -em $master_file
 #echo "$master_key"
 }
 #---------------------------------------------#
@@ -44,12 +44,12 @@ echo "   Resetting Master Key: "
 echo "   Enter New Master key: "
 read -s  master_key
 #decrypting the masterkey
-bash $ipath/src/encrypt.sh -de $master_file
+bash $ipath/src/encrypt.sh -dm $master_file
 cat > $master_file <<EOF
 $master_key
 EOF
 #enecrypting the masterkey
-bash $ipath/src/encrypt.sh -en $master_file
+bash $ipath/src/encrypt.sh -em $master_file
 else
 echo "   Master Key has not updated."
 fi

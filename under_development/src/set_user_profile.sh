@@ -28,10 +28,10 @@ ipath=`cat $install_path |awk '{print $1}'`
 # When ever access this code ask for masterkey.
 function get_master_key() {
 #decrypting the masterkey
-bash $ipath/src/encrypt.sh -de $master_file
+bash $ipath/src/encrypt.sh -dm $master_file
 master_key=`cat $master_file |awk '{print $1}'`
 #encrypting the masterkey
-bash $ipath/src/encrypt.sh -en $master_file
+bash $ipath/src/encrypt.sh -em $master_file
 }
 #---------------------------------------------#
 function set_profile() {
@@ -52,12 +52,12 @@ echo " OTP service is desabled. "
 fi
 #<---
 #decrypting the profile
-bash $ipath/src/encrypt.sh -de $profile
+bash $ipath/src/encrypt.sh -dp $profile
 cat > $profile <<EOF
  $usr_name:$usr_mail:$phone_nmbr:1:$otp_key
 EOF
 #encrypting the profile
-bash $ipath/src/encrypt.sh -en $profile
+bash $ipath/src/encrypt.sh -ep $profile
 #<--
 #----> Setting Masterkey
 read -p " Set Master Key ?[yes/no]: " option
@@ -67,12 +67,12 @@ echo " Setting the Master Key: "
 read -p "Enter Master key:" master_key
 #-->
 #decrypting the master_file
-bash $ipath/src/encrypt.sh -de $master_file
+bash $ipath/src/encrypt.sh -dm $master_file
 cat > $master_file <<EOF
 $master_key
 EOF
 #encrypting the master_file
-bash $ipath/src/encrypt.sh -en $master_file
+bash $ipath/src/encrypt.sh -em $master_file
 #<--
 else
 echo " Master Key has been set to default."
@@ -89,12 +89,12 @@ read -p "What is your Date of Birth [dd-mm-yyyy] ?: " QA1
 read -p "What is your favorite place ?: " QA2
 #-->
 #decrypting the master_file
-bash $ipath/src/encrypt.sh -de $recovery
+bash $ipath/src/encrypt.sh -dr $recovery
 cat > $recovery <<EOF
 1:$Q1:$QA1:$Q2:$QA2
 EOF
 #encrypting the master_file
-bash $ipath/src/encrypt.sh -en $recovery
+bash $ipath/src/encrypt.sh -er $recovery
 #<--
 echo " Recovery Questions has been updated."
 }

@@ -41,7 +41,7 @@ EOF
 # <=================Main code==================>
 #-------------------------------------------------#
 # Decrypt the database before using
-bash $ipath/src/encrypt.sh -de $database
+bash $ipath/src/encrypt.sh -dd $database
 last_updated=$(date +"%D ")
 #print_welcome
 read -p "Give  nickname:" nickname
@@ -50,7 +50,7 @@ if [ $? -eq 0 ]
 then
 echo "Present Details:"
 # Encrypting the database
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 bash $ipath/src/show_details.sh $nickname
 
 # Updating Database
@@ -63,7 +63,7 @@ read -p "Any hints :" hints
 #echo "updated on = $last_updated"
 
 # Decrypt the database before using
-bash $ipath/src/encrypt.sh -de $database
+bash $ipath/src/encrypt.sh -dd $database
 # Removing old entry
 sed -i "/$nickname:/d" $database
 
@@ -73,7 +73,7 @@ cat >> $database <<EOF
 
 EOF
 # Encrypting the database
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 
 echo "$nickname updated successfully.";echo
 
@@ -81,7 +81,7 @@ else
 echo ""
 echo "Nickname doesn't exist in database."
 # Encrypting the database
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 echo ""
 fi
 

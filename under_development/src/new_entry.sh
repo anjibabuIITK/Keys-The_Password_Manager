@@ -40,16 +40,16 @@ EOF
 # function to check nickname
 function Is_exist() {
 # Decrypt the database before using
-bash $ipath/src/encrypt.sh -de $database
+bash $ipath/src/encrypt.sh -dd $database
 a=`grep " $1:" $database`
 if [ "$?" == "0" ];then
 echo " Keys: nickname already exist. Try other name."
 # Encrypt the database after using
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 else
 echo " Keys: $1 ---> OK"
 # Encrypt the database after using
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 break
 fi
 }
@@ -71,13 +71,13 @@ read -p "Any hints :" hints
 #echo "updated on = $last_updated"
 
 # Decrypt the database before using
-bash $ipath/src/encrypt.sh -de $database
+bash $ipath/src/encrypt.sh -dd $database
 cat >> $database <<EOF
  $nickname:$username:$password:$hints:$last_updated
 
 EOF
 # Encrypt the database after using
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 echo " Entry has been registred successfully."
 echo
 

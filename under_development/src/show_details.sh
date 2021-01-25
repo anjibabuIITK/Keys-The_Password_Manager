@@ -27,22 +27,22 @@ ipath=`cat $install_path |awk '{print $1}'`
 # function to check nickname
 function If_valid_show() {
 # Decrypt the database before using
-bash $ipath/src/encrypt.sh -de $database
+bash $ipath/src/encrypt.sh -dd $database
 a=`grep " $1:" $database`
 if [ "$?" == "0" ];then
 # Encrypt the database after using
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 show_menu $1
 else
 echo " Keys: Invalid nickname ($1)."
 # Encrypt the database after using
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 fi
 }
 #-------------------------------------------------#
 function show_menu() {
 #decrypt database
-bash $ipath/src/encrypt.sh -de $database
+bash $ipath/src/encrypt.sh -dd $database
 a=`grep " $1:" $database`
 if [ $? -eq 0 ]
 then
@@ -51,7 +51,7 @@ password=`grep " $1:" $database |cut -d ":" -f3`
 hint=`grep " $1:" $database |cut -d ":" -f4`
 lst_update=`grep " $1:" $database |cut -d ":" -f5`
 #decrypt database
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 
 echo " Details:"
 echo ""

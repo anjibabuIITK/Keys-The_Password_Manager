@@ -28,16 +28,16 @@ ipath=`cat $install_path |awk '{print $1}'`
 # When ever access this code ask for masterkey.
 function get_master_key() {
 #decrypting the masterkey
-bash $ipath/src/encrypt.sh -de $master_file
+bash $ipath/src/encrypt.sh -dm $master_file
 master_key=`cat $master_file |awk '{print $1}'`
 #encrypting the masterkey
-bash $ipath/src/encrypt.sh -en $master_file
+bash $ipath/src/encrypt.sh -em $master_file
 }
 #---------------------------------------------#
 # function to get user registered email.
 function get_user_data() {
 # Decrypt 
-bash $ipath/src/encrypt.sh -de $profile
+bash $ipath/src/encrypt.sh -dp $profile
 #echo "profile decrypted."
 user_name=`cat $profile |cut -d ":" -f1`
 user_mail=`cat $profile |cut -d ":" -f2`
@@ -45,7 +45,7 @@ user_phn=`cat $profile |cut -d ":" -f3`
 profile_key=`cat $profile |cut -d ":" -f4`
 otp_key=`cat $profile |cut -d ":" -f5`
 # Encrypt 
-bash $ipath/src/encrypt.sh -en $profile
+bash $ipath/src/encrypt.sh -ep $profile
 #echo "profile encrypted."
 }
 #-------------------------------------------------#
@@ -69,12 +69,12 @@ read -p "Email: " usr_mail_new
 read -p "Mobile:" phone_nmbr_new
 
 #decrypting the profile
-bash $ipath/src/encrypt.sh -de $profile
+bash $ipath/src/encrypt.sh -dp $profile
 cat > $profile <<EOF
  $usr_name_new:$usr_mail_new:$phone_nmbr_new:1:$otp_key
 EOF
 #encrypting the profile
-bash $ipath/src/encrypt.sh -en $profile
+bash $ipath/src/encrypt.sh -ep $profile
 #<--
 echo "Successfully updated the user profile"
 else
@@ -97,12 +97,12 @@ read -p "What is your Date of Birth [dd-mm-yyyy] ?: " QA1
 read -p "What is your favorite place ?: " QA2
 #-->
 #decrypting the recovery file
-bash $ipath/src/encrypt.sh -de $recovery
+bash $ipath/src/encrypt.sh -dr $recovery
 cat > $recovery <<EOF
 1:$Q1:$QA1:$Q2:$QA2
 EOF
 #encrypting the recovery file
-bash $ipath/src/encrypt.sh -en $recovery
+bash $ipath/src/encrypt.sh -er $recovery
 #<--
 echo " Recovery Questions has been updated."
 else

@@ -7,6 +7,15 @@
 #          IIT Kanpur, India.
 #          anjibabu480@gmail.com
 #
+# Description:
+#
+#  "Keys" is a password manager to help a user to store and organize
+#   passwords. Keys manages and stores the passwords encrypted and 
+#   locally, requiring the user to create a master password: a single,
+#   strong password  which  grants the user access to their entire
+#   password database. Keys protects the user's data using the 
+#   AES-256-cbc encryption with salted format.
+#
 #!/bin/bash
 #---------------------------------------------------------------#
 # Defining text colors
@@ -18,7 +27,7 @@ pur=`tput setaf 5`
 rst=`tput sgr0`
 bold=`tput bold`
 #---------------------------------------------------------------#
-#Check .Password_Manager/etc/profile exists or not. if not create
+#---> Necessary directories and files.
 install_dir=${KEYS_INSTALL_DIR}
 key=${install_dir}/.keys
 profile=${install_dir}/.keys/etc/profile/profile
@@ -75,11 +84,11 @@ read -p "$message" readEnterKey
 # When ever access this code ask for masterkey.
 function get_master_key() {
 # Decrypt 
-bash $ipath/src/encrypt.sh -de $master_file
+bash $ipath/src/encrypt.sh -dm $master_file
 
 master_key=`cat $master_file |awk '{print $1}'`
 # Encrypt 
-bash $ipath/src/encrypt.sh -en $master_file
+bash $ipath/src/encrypt.sh -em $master_file
 }
 #-------------------------------------------------#
 # Access Installed directory 
@@ -91,8 +100,8 @@ ipath=`cat $install_path |awk '{print $1}'`
 }
 #-------------------------------------------------#
 function send_OTP() {
-# otp_key =1; OTP service ON
-# otp_key =0; OTP service OFF
+# if otp_key =1; OTP service ON
+# if otp_key =0; OTP service OFF
  if [[ "$otp_key" == "1" ]];then
     OTP=$RANDOM
     echo "OTP to access Keys package: $OTP"|mutt -s " OTP " $user_mail &
@@ -103,7 +112,7 @@ function send_OTP() {
 # function to get user registered email.
 function get_user_mail() {
 # Decrypt 
-bash $ipath/src/encrypt.sh -de $profile
+bash $ipath/src/encrypt.sh -dp $profile
 #echo "profile decrypted."
 user_name=`cat $profile |cut -d ":" -f1`
 user_mail=`cat $profile |cut -d ":" -f2`
@@ -111,7 +120,7 @@ user_phn=`cat $profile |cut -d ":" -f3`
 profile_key=`cat $profile |cut -d ":" -f4`
 otp_key=`cat $profile |cut -d ":" -f5`
 # Encrypt 
-bash $ipath/src/encrypt.sh -en $profile
+bash $ipath/src/encrypt.sh -ep $profile
 #echo "profile encrypted."
 }
 #-------------------------------------------------#
@@ -122,12 +131,12 @@ echo;echo "OTP service is alredy enabled.";echo
  else
 #<---
     #decrypting the profile
-    bash $ipath/src/encrypt.sh -de $profile
+    bash $ipath/src/encrypt.sh -dp $profile
 cat > $profile <<EOF
  $user_name:$user_mail:$user_phn:1:1
 EOF
 #encrypting the profile
-bash $ipath/src/encrypt.sh -en $profile
+bash $ipath/src/encrypt.sh -ep $profile
 #<--
    echo;echo "OTP service is enabled.";echo
 fi
@@ -140,12 +149,12 @@ function disable_OTP_service() {
  else
 #<---
     #decrypting the profile
-    bash $ipath/src/encrypt.sh -de $profile
+    bash $ipath/src/encrypt.sh -dp $profile
 cat > $profile <<EOF
  $user_name:$user_mail:$user_phn:1:0
 EOF
 #encrypting the profile
-bash $ipath/src/encrypt.sh -en $profile
+bash $ipath/src/encrypt.sh -ep $profile
 #<--
     echo;echo "OTP service is disabled.";echo
 fi
@@ -200,13 +209,24 @@ rm tmp
 }
 #---------------------------------------------#
 function uninstall() {
-mv ${install_dir}/bin/keys ${install_dir}/src/keys.sh
-rm -rf ${install_dir}/.keys
-rm -rf ${install_dir}/bin
-sed -i "/KEYS/d" ~/.bashrc
-sed -i "/# Keys/d" ~/.bashrc
-echo " Keys: Unistalled the 'Keys' package."
-notify-send "Keys" "Keys has been uninstalled."
+root=`id -u`
+if [ $root -eq 0 ]; then           
+  mv ${install_dir}/bin/keys ${install_dir}/src/keys.sh
+  rm -rf ${install_dir}/.keys
+  rm -rf ${install_dir}/bin
+  sed -i "/KEYS/d" ~/.bashrc
+  sed -i "/# Keys/d" ~/.bashrc
+  echo "$bold $red Keys$rst: Unistalled the 'Keys' package."
+  notify-send "Keys" "Keys has been uninstalled."
+else
+ not_root_user
+fi
+}
+#-----------------------------------------------------#
+function not_root_user() {
+echo; echo "$bold $red Access denied.$rst"
+ echo "$bold $red Uninstall as root user.$rst"
+ exit 
 }
 #-----------------------------------------------------#
 #  <===========MAIN CODE STARTS============>  #

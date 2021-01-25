@@ -25,16 +25,16 @@ ipath=`cat $install_path |awk '{print $1}'`
 # function to check nickname
 function Is_exist() {
 # Decrypt the database before using
-bash $ipath/src/encrypt.sh -de $database
+bash $ipath/src/encrypt.sh -dd $database
 a=`grep " $1:" $database`
 if [ "$?" == "0" ];then
 # Encrypt the database after using
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 remove $1
 else
 echo " Keys: nickname ($1) Doesn't exist in Database."
 # Encrypt the database after using
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 fi
 }
 #-------------------------------------------------#
@@ -42,10 +42,10 @@ function remove() {
 read -p "Are you sure want to remove $1? [yes/no]: " option
 if [ "$option" == "yes" ];then
 # Decrypt the database before using
-bash $ipath/src/encrypt.sh -de $database
+bash $ipath/src/encrypt.sh -dd $database
 sed -i "/$1:/d" $database
 # encrypt the database After using
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 echo "nickname ($1) has been removed."
 else
 echo "nickname ($1) has not removed."

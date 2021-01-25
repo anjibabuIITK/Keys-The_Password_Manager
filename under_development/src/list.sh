@@ -40,7 +40,7 @@ EOF
 # Main code
 #-------------------------------------------------#
 # Decrypt the database before using
-bash $ipath/src/encrypt.sh -de $database
+bash $ipath/src/encrypt.sh -dd $database
 array=`awk {'print $1'} $database|cut -d ':' -f1`
 j=0;k=0
 for i in $array;do
@@ -53,7 +53,7 @@ j=0
 fi
 done
 # Encrypt the database after using
-bash $ipath/src/encrypt.sh -en $database
+bash $ipath/src/encrypt.sh -ed $database
 #
 paste tmp* > FILE
 rm tmp*
