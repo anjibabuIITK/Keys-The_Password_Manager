@@ -21,5 +21,8 @@
  5.2 keys --disable-OTP
 
 6. Entry data in a loop.
-7. Check for nickname while removing
+7. Check for nickname while removing and enable direct command to see any nickname.
+  7.1 keys --nickname <name>
 8. check profilekey, if user setting profile again, print already exisst. --set-user-profile
+9. create a directory ./keys/cache/random.key to store the random number to encrypt and to decrypt.
+10.Create a keys_v.1.0.deb and distribute in debian software center.

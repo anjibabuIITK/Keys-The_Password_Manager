@@ -134,57 +134,70 @@ fi
 #
 }
 #-------------------------------------------------#
+function encrypt() {
+# Encrypt file with password $passwd
+openssl enc -aes-256-cbc -salt -k $2 -in $1 -out $1.key
+rm $1
+}
+#-------------------------------------------------#
 function make_directories() {
 install_dir=`pwd`
+export KEYS_INSTALL_DIR=$install_dir
 user=`pwd|cut -d "/" -f3`
 KEY="${install_dir}/.keys"
 etc="${install_dir}/.keys/etc"
 Database_d=${install_dir}/.keys/etc/Database
 Profile_d=${install_dir}/.keys/etc/profile
 path_d=${install_dir}/.keys/etc/path
+cache_d=${install_dir}/.keys/cache
 
 profile=${install_dir}/.keys/etc/profile/profile
 recovery=${install_dir}/.keys/etc/profile/recovery
 database=${install_dir}/.keys/etc/Database/database
 install_path=${install_dir}/.keys/etc/path/install_path
 master_file=${install_dir}/.keys/etc/profile/masterkey
+cache=${install_dir}/.keys/cache/random
 initial_key=123456
 
 #create empty profile and encrypt
-mkdir -p $KEY $etc $Database_d $Profile_d $path_d
-touch $profile $recovery $database $install_path $master_file
-
+mkdir -p $KEY $etc $Database_d $Profile_d $path_d $cache_d
+touch $profile $recovery $database $install_path $master_file $cache
 
 #----->
 cat >$profile<<EOF
  :::0:0
 EOF
-bash src/encrypt.sh -en $profile
+encrypt $profile $initial_key
 #----->
 cat >$database<<EOF
 Press--->q-->to-exit.
 EOF
 #encrypting database
-bash src/encrypt.sh -en $database
+encrypt $database $initial_key
 #--->
 cat > $master_file <<EOF
 $initial_key
 EOF
 #encrypting masterkey
-bash src/encrypt.sh -en $master_file
+encrypt $master_file $initial_key
 #
 cat > $recovery <<EOF
 0::::
 EOF
 #encrypting recovery file
-bash src/encrypt.sh -en $recovery
-
+encrypt $recovery $initial_key
+#
+cat > $cache <<EOF
+${initial_key}:${initial_key}:${initial_key}:${initial_key}
+EOF
+#
 #---> Changing ownership to user
 chown -R $user:$user $KEY
 chown -R $user:$user $profile.key
 chown -R $user:$user $master_file.key
 chown -R $user:$user $recovery.key
 chown -R $user:$user $database.key
+chown -R $user:$user $cache
 chown -R $user:$user $install_path
 echo "$bold $grn Keys$rst: Created database."
 echo "$bold $grn Keys$rst: Created required directories and files"
@@ -235,7 +248,7 @@ echo "$bold $red Keys$rst: Unistalled the 'Keys' package."
 root=`id -u`
 if [ $root -eq 0 ]; then           
    if [ $# -eq 0 ] ;then
-  	check_toilet
+#  	check_toilet
   	check_mutt
 	make_directories
   	check_dependencies
