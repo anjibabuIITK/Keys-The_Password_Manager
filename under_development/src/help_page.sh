@@ -31,6 +31,9 @@ cat << EOF
 	keys list
 	   Prints the available nicknames and exit.
 
+	keys --nickname|-n
+	   Prints the details of given nickname.
+
 	keys --help|-h
 	   Prints the information about package and exit.
 
