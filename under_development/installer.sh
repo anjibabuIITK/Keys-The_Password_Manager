@@ -170,7 +170,7 @@ EOF
 encrypt $profile $initial_key
 #----->
 cat >$database<<EOF
-Press--->q-->to-exit.
+exit
 EOF
 #encrypting database
 encrypt $database $initial_key

@@ -1,0 +1,34 @@
+0. Need to check the code for user details, if not set warn to set profile at beginning of the code.
+
+1. configure mutt and enable OTP sharing to mail. [ create a gmail id for keys. (keys.package@gmail.com) ]
+
+2.Mailing options:
+ 2.1. Should send a mail when accessing the code. and send OTP.
+ 2.2. Should send OTP to registered user when resetting masterkey. 
+      if user is not availble warn to set profile first.
+ 2.3. Enable recovery option during profile setting. and store it for future reference.
+      Add a case statement during resetting masterkey keys --recover-masterkey, it should prompt the question
+      which user has registered, and ask for answer. allow resetting masterkey,, if ans matches.
+      keys --recover-masterkey
+
+3.Color font needs to be enabled.
+  3.1 Make it print clean and neet output on screen.
+
+#4.Ask query to Support team ----> give a command keys --query [not possible]
+
+5. What if , I dont have access to internet? Is there option to unset OTP? 
+ 5.1 keys --enable-OTP
+ 5.2 keys --disable-OTP
+
+6. Entry data in a loop.
+7. Check for nickname while removing and enable direct command to see any nickname.
+  7.1 keys --nickname <name>
+8. check profilekey, if user setting profile again, print already exisst. --set-user-profile
+9. create a directory ./keys/cache/random.key to store the random number to encrypt and to decrypt.
+10.Create a keys_v.1.0.deb and distribute in debian software center.
+11. Impliment the case where user enter empty details for set profile or any fields.
+12. Impliment multiuser environment
+13. impliment import and export database to a file
+13.1 keys --import filename
+13.2 keys --export filename
+
