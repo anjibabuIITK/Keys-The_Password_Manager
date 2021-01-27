@@ -239,7 +239,7 @@ get_user_mail
 #Print help without masterkey
 case "$@" in
    -h|--help)bash $ipath/src/help_page.sh;exit;;
-   -v|--version)echo "Keys: version 1.0.0";exit;;
+   -v|--version)echo "$bold$red Keys:$rst$bold$blu version 1.0.0$rst";exit;;
 --recover-masterkey|--recover|-rc)
 print_welcome
 bash $ipath/src/recover_masterkey.sh
@@ -262,61 +262,60 @@ esac
 #if user mail acceble? if not, ask user to set profile first.
   if [[ "$profile_key" == "0" ]];then
 #     echo "   <---------NOTICE------->"
-     header " NOTICE  "
-     echo "Keys: User has not been registered."
-     echo "Keys: Regiter using --set-profile tag."
-     echo "Keys: keys --set-profile";print_close;exit
+     header "    WARNING "
+     echo "$bold $red Keys$rst:$bold User has not been registered.$rst"
+     echo "$bold $red Keys$rst:$bold Regiter using --set-profile tag.$rst"
+     echo "$bold $red Keys$rst:$bold $grn keys --set-profile$rst";print_close;exit
   fi  
 #---------------------------------------------#
 #Ask user to enter masterkey
 send_OTP
+header ""
 echo "$bold $red [ OTP has been sent to registered email. ]$rst";echo
-for i in 1 2 3  # for setting up 3 attempts
-do
+for i in 1 2 3 ; do  # for setting up 3 attempts
 read -s -p "$bold $ylw Enter OTP/masterkey:$rst " passwd
 echo ""
 #
-if [ "$passwd" != "$OTP" ];then
-    if [ "$passwd" == $master_key ] ;then
-        echo " $bold $red Access Granted !$rst"
-        inform_user
-        break
-    else
-    echo "$bold $red Acces denied. May be Wrong Password entered.$rst"
-    echo "$bold $red Try again $rst"
+if [[ "$passwd" != "" ]]; then
+   if [ "$passwd" != "$OTP" ];then
+      if [ "$passwd" == $master_key ] ;then
+         echo "$bold $grn Access Granted !$rst"
+         inform_user
+         #clear;header
+         break
+      else
+         echo "$bold $red Acces denied. May be Wrong Password entered.$rst"
+         echo "$bold $ylw Try again $rst"
+      fi
+   else
+      echo "$bold $grn Access Granted ! $rst"
+      inform_user
+      #clear;header
+      break
    fi
 else
-echo "$bold $pur Access Granted ! $rst"
-inform_user
-#echo "$bold $pur Conti..$rst" 
-break
+    echo "$bold $red Acces denied. May be Wrong Password entered.$rst"
+    echo "$bold $ylw Try again $rst"
 fi
-if  [ "$i" -eq '3' ]
-then
-echo ""
-echo "=========================="
-echo "$bold $ylw Reached 3 attempts . Bye $rst"
-echo "=========================="
-notify-send "ALERT" "Failed to Access Your Passwords"
-exit
-fi
+  if  [ "$i" -eq '3' ]
+  then
+     echo ""
+     echo "=========================="
+     echo "$bold $ylw Reached 3 attempts . Bye $rst"
+     echo "=========================="
+     notify-send "ALERT" "Failed to Access Your Passwords"
+     exit
+  fi
 done
-#echo "Exit status from line:154";exit
 #---------------------------------------------#
-#echo "Enter Master Key: "
-#read -s user_entered_key
-#  if [[ "$user_entered_key" == "$master_key" ]];then
-#     echo "Access Granted." 
-#-----#
 #echo "No of Arguments:$#"
 if [ $# -eq 0 ] ;then
 #echo " Arguments $#"
 while true;do
-print_welcome
 bash $ipath/src/list.sh
 print_close
 
-read -p "Enter nickname: " nickname
+read -p "$bold$pur Enter nickname: $rst" nickname
    case "$nickname" in
      q|exit|quit)exit;;
    esac
@@ -329,50 +328,47 @@ done
 else
 case "$1" in
 --nickname|-n)
-print_welcome
+#print_welcome
 bash $ipath/src/show_details.sh $2
-print_close;;
+#print_close;;
+;;
 --enable-OTP)enable_OTP_service;;
 --disable-OTP)disable_OTP_service;;
--ne|--new-entry)echo "New entry"
+-ne|--new-entry)
 bash $ipath/src/new_entry.sh;;
--ue|--update-entry)echo "Update Entry"
+-ue|--update-entry)
 bash $ipath/src/update_entry.sh ;;
--h|--help) echo "Asking Help"
+-h|--help)
 bash $ipath/src/help_page.sh;;
 -l|list|--list)
-print_welcome
 bash $ipath/src/list.sh
-print_close
+#print_close
 ;;
--re|--remove-entry|--delete-entry)echo "Delete the entry"
+-re|--remove-entry|--delete-entry)
 bash $ipath/src/remove_entry.sh;;
 --set-profile|-sp)
-print_welcome
 bash $ipath/src/set_user_profile.sh $profilekey
-print_close
+#print_close
 ;;
 --update-profile)
-print_welcome
 bash $ipath/src/update_user_profile.sh
 update_user
-print_close
+#print_close
 ;;
 --reset-masterkey|-rmk)
-print_welcome
 bash $ipath/src/reset_masterkey.sh
-print_close
+#print_close
 ;;
 --version|-v)
 echo "Keys version 1.0.0";;
 --uninstall|--clean)uninstall;;
-*)echo "Not a valid argument."
+*)echo;echo "$bold$red Keys:$rst $bold Not a valid argument.$rst"
 
 esac
 fi
-
-# masterkey condirion
-#else
-#   echo "Entered wrong password." 
-#   exit
-#fi
+print_close
+#
+#-----------------------------------------------------#
+#     <===========MAIN CODE ENDS============>         #
+#               Anji Babu Kapakaya 		      #
+#-----------------------------------------------------#

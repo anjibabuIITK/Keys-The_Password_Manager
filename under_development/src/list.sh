@@ -11,6 +11,15 @@ master_file=${install_dir}/.keys/etc/profile/masterkey
 ipath=`cat $install_path |awk '{print $1}'`
 [ -d $key ] ||mkdir -p $key
 #---------------------------------------------------------------#
+# Defining text colors
+red=`tput setaf 1`
+grn=`tput setaf 2`
+ylw=`tput setaf 3`
+blu=`tput setaf 4`
+pur=`tput setaf 5`
+rst=`tput sgr0`
+bold=`tput bold`
+#---------------------------------------------------------------#
 #
 #path=$HOME/.keys/etc/profile
 #profile=$HOME/.keys/etc/profile/profile
@@ -46,7 +55,7 @@ j=0;k=0
 for i in $array;do
 echo "$i" >> tmp$k
 j=`expr $j + 1`
-if [ $j -eq 10 ] 
+if [ $j -eq 5 ] 
 then
  k=`expr $k + 1`
 j=0
@@ -59,9 +68,12 @@ paste tmp* > FILE
 rm tmp*
 # Welcome Msg
 #print_welcome
-echo ""
-echo "Available Nicknames:"
-cat FILE
+echo "$bold$ylw                   Available Nicknames$rst"
+echo "$bold <------------------------------------------------------------>$rst"
+#cat FILE
+while read row;do
+echo "$bold $row $rst"
+done <FILE
 #print_close
 rm FILE
 

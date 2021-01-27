@@ -14,6 +14,15 @@ master_file=${install_dir}/.keys/etc/profile/masterkey
 ipath=`cat $install_path |awk '{print $1}'`
 [ -d $key ] ||mkdir -p $key
 #---------------------------------------------------------------#
+# Defining text colors
+red=`tput setaf 1`
+grn=`tput setaf 2`
+ylw=`tput setaf 3`
+blu=`tput setaf 4`
+pur=`tput setaf 5`
+rst=`tput sgr0`
+bold=`tput bold`
+#---------------------------------------------------------------#
 #!/bin/bash
 #path=$HOME/.keys/etc/profile
 #profile=$HOME/.keys/etc/profile/profile
@@ -34,7 +43,7 @@ if [ "$?" == "0" ];then
 bash $ipath/src/encrypt.sh -ed $database
 show_menu $1
 else
-echo " Keys: Invalid nickname ($1)."
+echo "$bold$red Keys$rst:$bold Invalid nickname ($red $1 $rst).$rst"
 # Encrypt the database after using
 bash $ipath/src/encrypt.sh -ed $database
 fi
@@ -53,16 +62,17 @@ lst_update=`grep " $1:" $database |cut -d ":" -f5`
 #decrypt database
 bash $ipath/src/encrypt.sh -ed $database
 
-echo " Details:"
+echo
+echo "$bold$ylw Details of ($grn $1 $rst):$rst"
 echo ""
-echo " nickname  :" $1
-echo " User Name :" $name
-echo " Password  :" $password
-echo " hint	 :" $hint
-echo " Last updated on :" $lst_update
+#echo " nickname  :" $1
+echo "$bold$grn     User Name :$rst" $name
+echo "$bold$grn     Password  :$rst" $password
+echo "$bold$grn     Hint      :$rst" $hint
+echo "$bold$grn     Updated on:$rst" $lst_update
 echo ""
 else
-echo "";echo " Not a valid nickname."
+echo "";echo "$bold$red Keys:$rst $bold Not a valid nickname.$rst"
 exit
 fi
 }

@@ -1,10 +1,20 @@
 #---------------------------------------------#
 # This code is a part of Keys tool
 #---------------------------------------------#
+#---------------------------------------------------------------#
+# Defining text colors
+red=`tput setaf 1`
+grn=`tput setaf 2`
+ylw=`tput setaf 3`
+blu=`tput setaf 4`
+pur=`tput setaf 5`
+rst=`tput sgr0`
+bold=`tput bold`
+#---------------------------------------------------------------#
 #!/bin/bash
 cat << EOF
       <----------------------------------------------------------------------------->
-                      <=========== WELCOME TO KEYS ==========>
+                    $bold$blu<===========$rst $bold$ylw WELCOME TO KEYS$rst$bold$blu ==========>$rst
 	           A tool to manasge your passwords at one place.  			
       <------------------------------------------------------------------------------>
  

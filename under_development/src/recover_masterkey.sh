@@ -17,6 +17,15 @@ master_file=${install_dir}/.keys/etc/profile/masterkey
 ipath=`cat $install_path |awk '{print $1}'`
 [ -d $key ] ||mkdir -p $key
 #---------------------------------------------------------------#
+# Defining text colors
+red=`tput setaf 1`
+grn=`tput setaf 2`
+ylw=`tput setaf 3`
+blu=`tput setaf 4`
+pur=`tput setaf 5`
+rst=`tput sgr0`
+bold=`tput bold`
+#---------------------------------------------------------------#
 #---------------------------------------------#
 #path=$HOME/.keys/etc/profile
 #profile=$HOME/.keys/etc/profile/profile
@@ -57,26 +66,25 @@ Get_recovery_questions
 
 #---> If recover questions already exists, continue
 if [[ "$r_key" == "1" ]];then
-echo ;echo "  Answer the bellow questions to recover the current Master Key: "
-
-read -p "$Q1 : " ans1
+echo ;echo "$bold$ylw  Answer the bellow questions to recover the current Master Key: $rst"
+echo;read -p "$bold$pur        $Q1 : $rst" ans1
 if [[ "$ans1" == "$QA1" ]];then
-   echo "   Correct Answer." 
-   read -p "$Q2 : " ans2
+   echo "$bold$red Keys:$rst$bold$grn Correct Answer.$rst" 
+   echo;read -p "$bold$pur        $Q2 : $rst" ans2
    if [[ "$ans2" == "$QA2" ]];then
-      echo "   Correct Answer."
-      echo "The current master key is: $master_key "
+   echo "$bold$red Keys:$rst$bold$grn Correct Answer.$rst" 
+   echo;echo "$bold$red Keys:$rst The current master key is:$rst$bold$red $master_key $rst"
    else
-      echo "   Wrong Answer.";exit
+      echo "$bold$red Keys:$rst$bold   Wrong Answer.$rst";exit
    fi
 else
-   echo "   Wrong Answer." ;exit
+      echo "$bold$red Keys:$rst$bold   Wrong Answer.$rst";exit
 fi
 #---> If recover questions not exists, Inform and exit
 else
-echo ;echo " Recovery questions not been set yet."
-echo "Complete user registration using bellow command"
-echo "keys --set-profile"
+echo ;echo "$bold$red Keys:$rst Recovery questions could not found.$rst"
+echo "$bold$red Keys:$rst Complete user registration using bellow command$rst"
+echo "$bold$red keys$rst$bold$grn --set-profile$rst"
 exit
 fi
 #---------------------------------------------#

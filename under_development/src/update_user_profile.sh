@@ -15,6 +15,15 @@ master_file=${install_dir}/.keys/etc/profile/masterkey
 ipath=`cat $install_path |awk '{print $1}'`
 [ -d $key ] ||mkdir -p $key
 #---------------------------------------------------------------#
+# Defining text colors
+red=`tput setaf 1`
+grn=`tput setaf 2`
+ylw=`tput setaf 3`
+blu=`tput setaf 4`
+pur=`tput setaf 5`
+rst=`tput sgr0`
+bold=`tput bold`
+#---------------------------------------------------------------#
 #---------------------------------------------#
 #path=$HOME/.keys/etc/profile
 #profile=$HOME/.keys/etc/profile/profile
@@ -50,24 +59,34 @@ bash $ipath/src/encrypt.sh -ep $profile
 }
 #-------------------------------------------------#
 function Print_present_data() {
-echo;echo "Current User Profile: "
-echo "Name  : " $user_name
-echo "Email : " $user_mail
-echo "Mobile:" $user_phn
-
+echo;echo "$bold$ylw   Current User Profile: $rst"
+echo "$bold$grn   Name  : $rst" $user_name
+echo "$bold$grn   Email : $rst" $user_mail
+echo "$bold$grn   Mobile: $rst" $user_phn
 }
 #-------------------------------------------------#
 function update_profile() {
-
-read -p " Are you sure to update profile? [yes/no]: " option
+echo
+read -p "$bold$red   Are you sure to update profile? [$rst${bold}yes/no$rst$bold$red]: $rst" option
 #echo "$option"
 if [[ "$option" == "yes" ]];then
 #----> Setting user profile
-echo;echo " Updating user profile:";echo
-read -p "Name : " usr_name_new
-read -p "Email: " usr_mail_new
-read -p "Mobile:" phone_nmbr_new
-
+echo;echo "$bold$ylw   Updating user profile:$rst";echo
+#-->Name
+while true;do
+read -p "$bold$pur   Name : $rst" usr_name_new
+ [ "$usr_name_new" == "" ] && echo "$bold$red   Keys:$rst $bold Empty Name is not allowed$rst"||break
+done
+#-->Email
+while true;do
+read -p "$bold$pur   Email: $rst" usr_mail_new
+ [ "$usr_mail_new" == "" ] && echo "$bold$red   Keys:$rst $bold Empty Email is not allowed$rst"||break
+done
+#-->Phone Number is optonal
+#while true;do
+read -p "$bold$pur   Mobile:$rst" phone_nmbr_new
+# [ "$phone_nmbr_new" == "" ] && echo "$bold$red   Keys:$rst $bold Empty Phone number is not allowed$rst"||break
+#done
 #decrypting the profile
 bash $ipath/src/encrypt.sh -dp $profile
 cat > $profile <<EOF
@@ -76,25 +95,33 @@ EOF
 #encrypting the profile
 bash $ipath/src/encrypt.sh -ep $profile
 #<--
-echo "Successfully updated the user profile"
+echo;echo "$bold${red}   Keys:$rst${bold}Successfully updated the user profile.$rst"
 else
-echo "Choosed to be not to update profile.";exit
+echo;echo "$bold${red}   Keys:$rst${bold}Choosed to be not to update profile.$rst";exit
 fi
 echo""
 }
 #-------------------------------------------------#
 function reset_recovery_data() {
 #----> Recovery options
-read -p " Do you want to update recovery questions? [yes/no]: " option
+read -p "$bold${red}   Do you want to update recovery questions? [$rst${bold}yes/no$rst$bold$red]:$rst " option
 #echo "$option"
 if [[ "$option" == "yes" ]];then
-echo " Setting recovery Questions : " 
+echo;echo "$bold$ylw   Updating recovery Questions : $rst" ;echo
 Q1="What is your Date of Birth [dd-mm-yyyy] ?"
 #echo "$Q1"
 Q2="What is your favorite place ?"
 #echo "$Q2"
-read -p "What is your Date of Birth [dd-mm-yyyy] ?: " QA1
-read -p "What is your favorite place ?: " QA2
+#--->Q1
+while true;do
+read -p "$bold$pur   What is your Date of Birth [dd-mm-yyyy] ?: $rst" QA1
+ [ "$QA1" == "" ] && echo "$bold$red   Keys:$rst $bold Empty Answer is not allowed$rst"||break
+done
+#--->Q2
+while true;do
+read -p "$bold$pur   What is your favorite place ?: $rst" QA2
+ [ "$QA2" == "" ] && echo "$bold$red   Keys:$rst $bold Empty Answer is not allowed$rst"||break
+done
 #-->
 #decrypting the recovery file
 bash $ipath/src/encrypt.sh -dr $recovery
@@ -104,9 +131,9 @@ EOF
 #encrypting the recovery file
 bash $ipath/src/encrypt.sh -er $recovery
 #<--
-echo " Recovery Questions has been updated."
+echo;echo "$bold$red   Keys:$rst$bold Recovery Questions has been updated.$rst"
 else
-echo " Recovery Questions has been not updated."
+echo;echo "$bold$red   Keys:$rst$bold Recovery Questions has been not updated.$rst"
 fi
 }
 #---------------------------------------------#
