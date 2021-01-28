@@ -37,7 +37,7 @@ hints=`echo $line|cut -d ":" -f4`
 if [ "$nickname" != "" ];then
  if [ "$nickname" != "exit" ];then
 cat >>$DATA<<EOF
-[$nickname]:
+[ $nickname ]:
  Nickname : $nickname
  Username : $username
  Password : $password

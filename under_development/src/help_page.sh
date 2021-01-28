@@ -1,7 +1,7 @@
-#---------------------------------------------#
-# This code is a part of Keys tool
-#---------------------------------------------#
-#---------------------------------------------------------------#
+#--------------------------------------------------------------#
+# This code is a part of Keys tool	     		       #
+# Written by Anji Babu Kapakayala	                       #
+#--------------------------------------------------------------#
 # Defining text colors
 red=`tput setaf 1`
 grn=`tput setaf 2`
@@ -19,10 +19,10 @@ cat << EOF
       <------------------------------------------------------------------------------>
  
      Install:
-         Install the Keys package using installer.sh provided.
-         bash installer.sh
+         Install the Keys package using installer provided.
+         ./install
 
-      Description:
+     Description:
 
 	"Keys" is a password manager to help a user to store and organize passwords.
          Keys manages and stores the passwords encrypted and locally, requiring the 
@@ -30,10 +30,10 @@ cat << EOF
          the user access to their entire password database. Keys protects the user's
          data using the AES-256-cbc encryption with salted format.
 
-      USAGE: 
+     USAGE: 
          keys <argument> [-ne],[-ue],[-h],[-re],[--set_profile],[--reset_masterkey]
                      
-      Options :
+     Options :
 
 	keys 
 	   Shows the available nicknames and ask user to select nickname.
@@ -82,9 +82,22 @@ cat << EOF
 	
 	Keys --uninstall|--clean
 	  Removes the all database and uninstalls the keys package.
----
-Master mind:
-Anji Babu Kapakayala
-IIT Kanpur, India.
+ 
+	Keys --import|-imp 
+          Imports the data from the file to database.
+	
+	Keys --export|-exp 
+          Exports the data from database to given file.
+
+
+
+     Examples:
+
+
+
+     Authour:
+         Anji Babu Kapakayala
+        (anjibabu480@gmail.com)
+          IIT Kanpur, India.
 
 EOF
