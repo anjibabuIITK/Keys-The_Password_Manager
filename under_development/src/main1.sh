@@ -345,7 +345,8 @@ bash $ipath/src/list.sh
 #print_close
 ;;
 -re|--remove-entry|--delete-entry)
-bash $ipath/src/remove_entry.sh;;
+#bash $ipath/src/remove_entry.sh;;
+bash $ipath/src/remove_entry.sh $2;;
 --set-profile|-sp)
 bash $ipath/src/set_user_profile.sh $profilekey
 #print_close
