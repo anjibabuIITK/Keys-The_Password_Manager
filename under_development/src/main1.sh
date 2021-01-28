@@ -363,6 +363,9 @@ bash $ipath/src/reset_masterkey.sh
 --import|-imp)
 bash $ipath/src/import_data.sh $2
 ;;
+--export|-exp)
+bash $ipath/src/export_data.sh $2
+;;
 --version|-v)
 echo "Keys version 1.0.0";;
 --uninstall|--clean)uninstall;;
