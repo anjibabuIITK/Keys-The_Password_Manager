@@ -18,6 +18,15 @@ master_file=${install_dir}/.keys/etc/profile/masterkey
 ipath=`cat $install_path |awk '{print $1}'`
 [ -d $key ] ||mkdir -p $key
 #---------------------------------------------------------------#
+# Defining text colors
+red=`tput setaf 1`
+grn=`tput setaf 2`
+ylw=`tput setaf 3`
+blu=`tput setaf 4`
+pur=`tput setaf 5`
+rst=`tput sgr0`
+bold=`tput bold`
+#---------------------------------------------------------------#
 #path=$HOME/.keys/etc/profile
 #profile=$HOME/.keys/etc/profile/profile
 #database=$HOME/.keys/etc/Database/database
@@ -37,41 +46,53 @@ bash $ipath/src/encrypt.sh -em $master_file
 }
 #---------------------------------------------#
 function reset_master_key() {
-read -p "  Are you sure to reset Master Key [yes/no]: " option
+echo;echo "$bold$ylw  Resetting Master Key: $rst"
+echo;read -p "$bold$red  Are you sure to reset Master Key [$rst${bold}yes/no$rst$bold$red]: $rst" option
 #echo "$option"
-if [[ "$option" == "yes" ]];then
-echo "   Resetting Master Key: "
-echo "   Enter New Master key: "
-read -s  master_key
-#decrypting the masterkey
-bash $ipath/src/encrypt.sh -dm $master_file
+if [[ "$option" != "" ]]; then
+   if [[ "$option" == "yes" ]];then
+     while true;do
+      echo "$bold$pur  Enter New Master key: $rst"
+      read -s  master_key
+        if [[ "$master_key" != "" ]]; then
+      #decrypting the masterkey
+      bash $ipath/src/encrypt.sh -dm $master_file
 cat > $master_file <<EOF
 $master_key
 EOF
-#enecrypting the masterkey
-bash $ipath/src/encrypt.sh -em $master_file
+     #enecrypting the masterkey
+     bash $ipath/src/encrypt.sh -em $master_file
+    echo;echo "$bold$red  Keys:$rst$bold  Master Key has been updated.$rst"
+       break
+       else
+       echo;echo "$bold$red  Keys:$rst$bold Empty Master Key is NOT allowed.$rst"
+       fi
+     done
+   else
+    echo;echo "$bold$red  Keys:$rst$bold  Master Key has not updated.$rst"
+   fi
 else
-echo "   Master Key has not updated."
-fi
+     echo;echo "$bold$red  Keys:$rst$bold  Master Key has not updated.$rst"
 
-#bash src/encrypt.sh -en $path/profile
+fi
 }
 #---------------------------------------------#
 #    <==========Main code=========>
 #---------------------------------------------#
 get_master_key
+reset_master_key
 #Ask user to enter masterkey
-echo ;echo "  Enter Present Master Key: "
-read -s user_entered_key
+#echo ;echo "  Enter Present Master Key: "
+#read -s user_entered_key
 
-if [[ "$user_entered_key" == "$master_key" ]];then
-   echo "   Access Granted." 
-   reset_master_key
-echo "   Master Key has been updated successfully."
-else
-   echo "   Entered wrong password." 
-   exit
-fi
+#if [[ "$user_entered_key" == "$master_key" ]];then
+#   echo "   Access Granted." 
+#   reset_master_key
+#echo "   Master Key has been updated successfully."
+#else
+#   echo "   Entered wrong password." 
+#   exit
+#fi
 #---------------------------------------------#
 #    <==========ANJI BABU KAPAKAYALA========>
 #---------------------------------------------#

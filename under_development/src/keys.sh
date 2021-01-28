@@ -278,7 +278,7 @@ echo ""
 #
 if [[ "$passwd" != "" ]]; then
    if [ "$passwd" != "$OTP" ];then
-      if [ "$passwd" == $master_key ] ;then
+      if [ "$passwd" == "$master_key" ] ;then
          echo "$bold $grn Access Granted !$rst"
          inform_user
          #clear;header
