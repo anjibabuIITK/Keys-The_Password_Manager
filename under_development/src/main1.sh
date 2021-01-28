@@ -360,6 +360,9 @@ update_user
 bash $ipath/src/reset_masterkey.sh
 #print_close
 ;;
+--import|-imp)
+bash $ipath/src/import_data.sh $2
+;;
 --version|-v)
 echo "Keys version 1.0.0";;
 --uninstall|--clean)uninstall;;

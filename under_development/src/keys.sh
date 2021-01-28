@@ -345,7 +345,8 @@ bash $ipath/src/list.sh
 #print_close
 ;;
 -re|--remove-entry|--delete-entry)
-bash $ipath/src/remove_entry.sh;;
+#bash $ipath/src/remove_entry.sh;;
+bash $ipath/src/remove_entry.sh $2;;
 --set-profile|-sp)
 bash $ipath/src/set_user_profile.sh $profilekey
 #print_close
@@ -358,6 +359,9 @@ update_user
 --reset-masterkey|-rmk)
 bash $ipath/src/reset_masterkey.sh
 #print_close
+;;
+--import|-imp)
+bash $ipath/src/import_data.sh $2
 ;;
 --version|-v)
 echo "Keys version 1.0.0";;

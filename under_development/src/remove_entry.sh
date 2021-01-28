@@ -80,7 +80,7 @@ print_close;echo
     read -p "$bold$pur Enter nickname: $rst" nickname
       if [ "$nickname" != "" ];then
          Is_exist $nickname
-         break
+#         break
       else
          echo;echo "$bold$red  Keys:$rst$bold Empty nickname ($1) is NOT allowed.$rst"
          exit
