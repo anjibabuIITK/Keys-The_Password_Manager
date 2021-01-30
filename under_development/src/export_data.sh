@@ -36,7 +36,7 @@ password=`echo $line|cut -d ":" -f3`
 hints=`echo $line|cut -d ":" -f4`
 if [ "$nickname" != "" ];then
  if [ "$nickname" != "exit" ];then
-cat >>$DATA<<EOF
+cat >$DATA<<EOF
 [ $nickname ]:
  Nickname : $nickname
  Username : $username
