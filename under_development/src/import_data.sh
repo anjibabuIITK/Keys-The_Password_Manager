@@ -59,7 +59,6 @@ if [ "$1" != "" ];then
 DATA=$1
 echo;echo "$bold$ble  Importing from: $DATA$rst"
 while read line;do
-echo "$line">>new_file
 nickname=`echo $line|cut -d ":" -f1`
 username=`echo $line|cut -d ":" -f2`
 password=`echo $line|cut -d ":" -f3`

@@ -12,6 +12,7 @@ recovery=${install_dir}/.keys/etc/profile/recovery
 database=${install_dir}/.keys/etc/Database/database
 install_path=${install_dir}/.keys/etc/path/install_path
 master_file=${install_dir}/.keys/etc/profile/masterkey
+mail_key=${install_dir}/.keys/etc/profile/mail
 ipath=`cat $install_path |awk '{print $1}'`
 [ -d $key ] ||mkdir -p $key
 #---------------------------------------------------------------#

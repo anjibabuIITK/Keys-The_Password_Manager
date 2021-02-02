@@ -14,13 +14,13 @@ bold=`tput bold`
 #!/bin/bash
 cat << EOF
       <----------------------------------------------------------------------------->
-                    $bold$blu<===========$rst $bold$ylw WELCOME TO KEYS$rst$bold$blu ==========>$rst
+                     <=========== WELCOME TO KEYS ==========>
 	           A tool to manasge your passwords at one place.  			
       <------------------------------------------------------------------------------>
  
      Install:
          Install the Keys package using installer provided.
-         ./install
+         sudo ./install i
 
      Description:
 

@@ -35,6 +35,7 @@ recovery=${install_dir}/.keys/etc/profile/recovery
 database=${install_dir}/.keys/etc/Database/database
 install_path=${install_dir}/.keys/etc/path/install_path
 master_file=${install_dir}/.keys/etc/profile/masterkey
+mail_key=${install_dir}/.keys/etc/profile/mail
 ipath=`cat $install_path |awk '{print $1}'`
 [ -d $key ] ||mkdir -p $key
 #---------------------------------------------------------------#
@@ -223,6 +224,11 @@ else
 fi
 }
 #-----------------------------------------------------#
+function get_mail_backup_keys() {
+mailkey=`cat $mail_key |cut -d ":" -f1`
+backup_key=`cat $mail_key |cut -d ":" -f2`
+}
+#-----------------------------------------------------#
 function not_root_user() {
 echo; echo "$bold $red Access denied.$rst"
  echo "$bold $red Uninstall as root user.$rst"
@@ -235,16 +241,30 @@ echo; echo "$bold $red Access denied.$rst"
 get_install_dir
 get_master_key
 get_user_mail
-
+get_mail_backup_keys
 #Print help without masterkey
 case "$@" in
    -h|--help)bash $ipath/src/help_page.sh;exit;;
    -v|--version)echo "$bold$red Keys:$rst$bold$blu version 1.0.0$rst";exit;;
---recover-masterkey|--recover|-rc)
-print_welcome
-bash $ipath/src/recover_masterkey.sh
-print_close;exit
-;;
+   --recover-masterkey|--recover|-rc)
+        print_welcome
+        bash $ipath/src/recover_masterkey.sh
+        print_close;exit
+    ;;
+   --backup|-b)
+     echo "$bold$red Keys:$rst Taking backup to Gdrive:"
+     source ~/.bashrc
+     [[ "$backup_key" == "1" ]] && rclone copy $key gdrive:keys ||echo "$bold$red Set profile First$rst"
+     echo "$bold$red Keys:$rst backup to Gdrive completed."
+     exit
+    ;;
+   --sync_data|--sync)
+     echo "$bold$red Keys:$rst Syncronizing backup from Gdrive:"
+     source ~/.bashrc
+     [[ "$backup_key" == "1" ]] && rclone copy gdrive:keys $key ||echo "$bold$red Set profile first$rst"
+     echo "$bold$red Keys:$rst Syncronizing backup from Gdrive completed."
+     exit
+      ;;
 esac
 #-----> 
   if [[ "$profile_key" == "0" ]];then
@@ -254,33 +274,32 @@ esac
         header "User registration"
 	bash $ipath/src/set_user_profile.sh $profile_key
         get_user_mail
-        welcome_user
+        [[ "$mailkey" == "1" ]] && welcome_user
 	print_close;exit;; #mail user
      esac
   fi
 #<-----
-#if user mail acceble? if not, ask user to set profile first.
+#Ask user to set profile first.
   if [[ "$profile_key" == "0" ]];then
-#     echo "   <---------NOTICE------->"
      header "    WARNING "
      echo "$bold $red Keys$rst:$bold User has not been registered.$rst"
      echo "$bold $red Keys$rst:$bold Regiter using --set-profile tag.$rst"
      echo "$bold $red Keys$rst:$bold $grn keys --set-profile$rst";print_close;exit
   fi  
 #---------------------------------------------#
-#Ask user to enter masterkey
-send_OTP
+#Ask user to enter masterkey or OTP if mail enabled
+ [[ "$mailkey" == "1" ]] && send_OTP
 header ""
-echo "$bold $red [ OTP has been sent to registered email. ]$rst";echo
+#echo "$bold $red [ OTP has been sent to registered email. ]$rst";echo
 for i in 1 2 3 ; do  # for setting up 3 attempts
-read -s -p "$bold $ylw Enter OTP/masterkey:$rst " passwd
+read -s -p "$bold $ylw Enter Masterkey:$rst " passwd
 echo ""
 #
 if [[ "$passwd" != "" ]]; then
    if [ "$passwd" != "$OTP" ];then
       if [ "$passwd" == "$master_key" ] ;then
          echo "$bold $grn Access Granted !$rst"
-         inform_user
+         [[ "$mailkey" == "1" ]] && inform_user
          #clear;header
          break
       else
@@ -289,7 +308,7 @@ if [[ "$passwd" != "" ]]; then
       fi
    else
       echo "$bold $grn Access Granted ! $rst"
-      inform_user
+      [[ "$mailkey" == "1" ]] && inform_user
       #clear;header
       break
    fi
@@ -329,11 +348,18 @@ else
 case "$1" in
 --nickname|-n)
 #print_welcome
-bash $ipath/src/show_details.sh $2
-#print_close;;
+arg1=$*
+for i in `seq 2 $#`;do
+var=`echo "$arg1"|cut -d " " -f$i`
+bash $ipath/src/show_details.sh $var
+done
 ;;
 --enable-OTP)enable_OTP_service;;
---disable-OTP)disable_OTP_service;;
+--enable-Mails)enable_OTP_service;; 
+--enable-AutoBackup)enable_OTP_service;; #need to update
+--disable-AutoBackup)disable_OTP_service;; #need to be updated
+--disable-OTP)disable_OTP_service;; #need to be updated
+--disable-Mails)disable_OTP_service;; #need to be updated
 -ne|--new-entry)
 bash $ipath/src/new_entry.sh;;
 -ue|--update-entry)
@@ -353,7 +379,7 @@ bash $ipath/src/set_user_profile.sh $profilekey
 ;;
 --update-profile)
 bash $ipath/src/update_user_profile.sh
-update_user
+[[ "$mailkey" == "1" ]] && update_user
 #print_close
 ;;
 --reset-masterkey|-rmk)
