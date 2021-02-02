@@ -132,6 +132,27 @@ echo "$bold $grn Keys$rst: openssl has been installed."
 #echo " Keys: [Error] openssl -----> Not found. [Please install openssl]";exit
 fi
 #
+#--->rclone
+d=`which rclone`
+if [ "$?" == "0" ];then
+echo "$bold $grn Keys$rst: rclone -----> Found."
+else
+curl -O https://downloads.rclone.org/rclone-current-linux-amd64.zip
+unzip rclone-current-linux-amd64.zip
+cd rclone-*-linu-amd64
+#install rclone
+sudo cp rclone /usr/bin/
+sudo chown root:root /usr/bin/rclone
+sudo chmod 755 /usr/bin/rclone
+#Install manpage
+sudo mkdir -p /usr/local/share/man/man1
+sudo cp rclone.1 /usr/local/share/man/man1/
+sudo mandb 
+echo "$bold $grn Keys$rst: rclone has been installed."
+rm -rf rclone-v1.53.4-linux-amd64
+rm rclone-current-linux-amd64.zip
+fi
+#
 }
 #-------------------------------------------------#
 function encrypt() {
@@ -156,12 +177,13 @@ recovery=${install_dir}/.keys/etc/profile/recovery
 database=${install_dir}/.keys/etc/Database/database
 install_path=${install_dir}/.keys/etc/path/install_path
 master_file=${install_dir}/.keys/etc/profile/masterkey
+mail_key=${install_dir}/.keys/etc/profile/mail
 cache=${install_dir}/.keys/cache/random
 initial_key=123456
 
 #create empty profile and encrypt
 mkdir -p $KEY $etc $Database_d $Profile_d $path_d $cache_d
-touch $profile $recovery $database $install_path $master_file $cache
+touch $profile $recovery $database $install_path $master_file $cache $mail_key
 
 #----->
 cat >$profile<<EOF
@@ -191,6 +213,9 @@ cat > $cache <<EOF
 ${initial_key}:${initial_key}:${initial_key}:${initial_key}
 EOF
 #
+cat > $mail_key <<EOF
+0:0
+EOF
 #---> Changing ownership to user
 chown -R $user:$user $KEY
 chown -R $user:$user $profile.key
@@ -199,6 +224,7 @@ chown -R $user:$user $recovery.key
 chown -R $user:$user $database.key
 chown -R $user:$user $cache
 chown -R $user:$user $install_path
+chown -R $user:$user $mail_key
 echo "$bold $grn Keys$rst: Created database."
 echo "$bold $grn Keys$rst: Created required directories and files"
 }
@@ -243,6 +269,14 @@ sed -i "/# Keys/d" ~/.bashrc
 echo "$bold $red Keys$rst: Unistalled the 'Keys' package."
 }
 #-----------------------------------------------------#
+function make_doc() {
+mkdir doc
+bash src/help_page.sh >manual.txt
+soffice --convert-to pdf manual.txt
+rm manual.txt
+mv manual.pdf doc
+}
+#-----------------------------------------------------#
 #   <=============MAIN CODE STARTS=============>
 #-----------------------------------------------------#
 root=`id -u`
@@ -254,6 +288,7 @@ if [ $root -eq 0 ]; then
   	check_dependencies
   	install_package
   	update_bashrc
+      # make_doc
   	notify-send " Keys" "Keys has been installed successfully."
    else
       case "$@" in
