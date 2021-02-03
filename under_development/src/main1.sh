@@ -30,6 +30,7 @@ bold=`tput bold`
 #---> Necessary directories and files.
 install_dir=${KEYS_INSTALL_DIR}
 key=${install_dir}/.keys
+database_d=${install_dir}/.keys/etc/Database
 profile=${install_dir}/.keys/etc/profile/profile
 recovery=${install_dir}/.keys/etc/profile/recovery
 database=${install_dir}/.keys/etc/Database/database
@@ -103,11 +104,11 @@ ipath=`cat $install_path |awk '{print $1}'`
 function send_OTP() {
 # if otp_key =1; OTP service ON
 # if otp_key =0; OTP service OFF
- if [[ "$otp_key" == "1" ]];then
+# if [[ "$otp_key" == "1" ]];then
     OTP=$RANDOM
     echo "OTP to access Keys package: $OTP"|mutt -s " OTP " $user_mail &
     #echo "OTP to access Keys package: $1"|mutt -s " OTP for access Keys" $user_mail &
- fi
+# fi
 }
 #---------------------------------------------#
 # function to get user registered email.
@@ -124,7 +125,7 @@ otp_key=`cat $profile |cut -d ":" -f5`
 bash $ipath/src/encrypt.sh -ep $profile
 #echo "profile encrypted."
 }
-#-------------------------------------------------#
+##-------------------------------------------------#
 # Enable OTP Service
 function enable_OTP_service() {
  if [[ "$otp_key" == "1" ]];then
@@ -141,6 +142,38 @@ bash $ipath/src/encrypt.sh -ep $profile
 #<--
    echo;echo "OTP service is enabled.";echo
 fi
+}
+#-------------------------------------------------#
+#i Enable Mail Service
+function enable_Mail_service() {
+ if [[ "$mailkey" == "1" ]];then
+   echo;echo "$bold$red Keys:$rst${bold}Mail service is elready enabled.$rst";echo
+ else
+#<---
+mailkey=1
+cat > $mail_key <<EOF
+ $mailkey:$backup_key
+EOF
+#<--
+   echo;echo "$bold$red Keys:$rst${bold}Mail service is enabled.$rst";echo
+fi
+exit
+}
+#-------------------------------------------------#
+# Disable Mail Service
+function disable_Mail_service() {
+ if [[ "$mailkey" == "0" ]];then
+   echo;echo "$bold$red Keys:$rst${bold}Mail service is elready disabled.$rst";echo
+ else
+#<---
+mailkey=0
+cat > $mail_key <<EOF
+ $mailkey:$backup_key
+EOF
+#<--
+   echo;echo "$bold$red Keys:$rst${bold}Mail service is disabled.$rst";echo
+fi
+exit
 }
 #-------------------------------------------------#
 # Disable OTP Service
@@ -229,6 +262,28 @@ mailkey=`cat $mail_key |cut -d ":" -f1`
 backup_key=`cat $mail_key |cut -d ":" -f2`
 }
 #-----------------------------------------------------#
+function sync_database() {
+ echo "$bold$red Keys:$rst Syncronizing backup from Gdrive:"
+ source ~/.bashrc
+if [[ "$backup_key" == "1" ]];then
+ rclone copy gdrive:keys/etc/Database $database_d 
+ rclone copy gdrive:keys/cache $database_d 
+#--> Updating database password
+d=`awk '{print $1}' $database_d/random |cut -d ':' -f3`
+#d=`cat $database_d/random|cut -d ":" -f3`
+# Decrypt file with password $d 
+openssl enc -d -aes-256-cbc -salt -k $d -in $database.key -out $database
+rm $database.key $database_d/random
+#encrypting the profile
+bash $ipath/src/encrypt.sh -ed $database
+#<---
+ echo "$bold$red Keys:$rst Syncronizing backup from Gdrive completed."
+ exit
+else
+echo "$bold$red Set profile and Enable AutoBackup Service.$rst"
+fi
+}
+#-----------------------------------------------------#
 function not_root_user() {
 echo; echo "$bold $red Access denied.$rst"
  echo "$bold $red Uninstall as root user.$rst"
@@ -258,12 +313,8 @@ case "$@" in
      echo "$bold$red Keys:$rst backup to Gdrive completed."
      exit
     ;;
-   --sync_data|--sync)
-     echo "$bold$red Keys:$rst Syncronizing backup from Gdrive:"
-     source ~/.bashrc
-     [[ "$backup_key" == "1" ]] && rclone copy gdrive:keys $key ||echo "$bold$red Set profile first$rst"
-     echo "$bold$red Keys:$rst Syncronizing backup from Gdrive completed."
-     exit
+   --sync_database|--sync)
+     sync_database
       ;;
 esac
 #-----> 
