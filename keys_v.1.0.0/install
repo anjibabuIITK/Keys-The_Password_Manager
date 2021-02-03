@@ -1,5 +1,0 @@
-#!/bin/bash
-case "$@" in
-i)sudo bash installer.sh ;;
-u)sudo bash installer.sh cl;;
-esac
