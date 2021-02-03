@@ -266,6 +266,7 @@ rm -rf ${install_dir}/.keys
 rm -rf bin
 sed -i "/KEYS/d" ~/.bashrc
 sed -i "/# Keys/d" ~/.bashrc
+Remove_Autobackup
 echo "$bold $red Keys$rst: Unistalled the 'Keys' package."
 }
 #-----------------------------------------------------#
@@ -275,6 +276,19 @@ bash src/help_page.sh >manual.txt
 soffice --convert-to pdf manual.txt
 rm manual.txt
 mv manual.pdf doc
+}
+#-----------------------------------------------------#
+#Remove the crontab
+function Remove_Autobackup() {
+crontab -l > mycron
+#echo new cron into cron file
+a=`grep "keys --backup" mycron`
+if [ "$?" == "0" ];then
+sed -i "/keys --backup/d" mycron
+#install new cron file
+crontab -u $user mycron
+rm mycron
+fi
 }
 #-----------------------------------------------------#
 #   <=============MAIN CODE STARTS=============>
