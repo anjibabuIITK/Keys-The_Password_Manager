@@ -204,6 +204,7 @@ echo "Hi $user_name, You have accessed the Keys at $time."|mutt -s " Access aler
 function welcome_user() {
 time=`date`
 get_master_key
+if [ $mailkey -eq 1 ] ;then
 cat >> tmp << EOF
 Hi $user_name,
 
@@ -219,6 +220,9 @@ Keys.
 EOF
 mutt -s " Welcome to Keys !!!" $user_mail < tmp &
 rm tmp
+
+echo "MAILKEY(2): $mailkey"
+fi
 }
 #---------------------------------------------#
 # function to inform user when updated the profile
@@ -324,8 +328,11 @@ esac
 #	print_welcome
         header "User registration"
 	bash $ipath/src/set_user_profile.sh $profile_key
-        get_user_mail
-        [[ "$mailkey" == "1" ]] && welcome_user
+        get_mail_backup_keys
+        get_user_mail 
+        echo "MAILKEY(1): $mailkey"
+#        [[ "$mailkey" == "1" ]] && welcome_user || echo ""
+         welcome_user
 	print_close;exit;; #mail user
      esac
   fi

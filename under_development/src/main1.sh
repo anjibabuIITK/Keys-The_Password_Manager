@@ -102,13 +102,11 @@ ipath=`cat $install_path |awk '{print $1}'`
 }
 #-------------------------------------------------#
 function send_OTP() {
-# if otp_key =1; OTP service ON
-# if otp_key =0; OTP service OFF
-# if [[ "$otp_key" == "1" ]];then
+if [ $mailkey -eq 1 ] ;then
     OTP=$RANDOM
     echo "OTP to access Keys package: $OTP"|mutt -s " OTP " $user_mail &
     #echo "OTP to access Keys package: $1"|mutt -s " OTP for access Keys" $user_mail &
-# fi
+fi
 }
 #---------------------------------------------#
 # function to get user registered email.
@@ -197,13 +195,16 @@ fi
 # function to inform user when accessed the code
 function inform_user() {
 time=`date`
+if [ $mailkey -eq 1 ] ;then
 echo "Hi $user_name, You have accessed the Keys at $time."|mutt -s " Access alert!!" $user_mail &
+fi
 }
 #---------------------------------------------#
 # function to inform user when accessed the code
 function welcome_user() {
 time=`date`
 get_master_key
+if [ $mailkey -eq 1 ] ;then
 cat >> tmp << EOF
 Hi $user_name,
 
@@ -219,12 +220,14 @@ Keys.
 EOF
 mutt -s " Welcome to Keys !!!" $user_mail < tmp &
 rm tmp
+fi
 }
 #---------------------------------------------#
 # function to inform user when updated the profile
 function update_user() {
 time=`date`
 get_master_key
+if [ $mailkey -eq 1 ] ;then
 cat >> tmp << EOF
 Hi $user_name,
 
@@ -240,6 +243,7 @@ Keys.
 EOF
 mutt -s " Profile updated !!!" $user_mail < tmp &
 rm tmp
+fi
 }
 #---------------------------------------------#
 function uninstall() {
@@ -324,8 +328,9 @@ esac
 #	print_welcome
         header "User registration"
 	bash $ipath/src/set_user_profile.sh $profile_key
-        get_user_mail
-        [[ "$mailkey" == "1" ]] && welcome_user
+        get_mail_backup_keys
+        get_user_mail 
+        welcome_user
 	print_close;exit;; #mail user
      esac
   fi
@@ -339,7 +344,7 @@ esac
   fi  
 #---------------------------------------------#
 #Ask user to enter masterkey or OTP if mail enabled
- [[ "$mailkey" == "1" ]] && send_OTP
+send_OTP
 header ""
 #echo "$bold $red [ OTP has been sent to registered email. ]$rst";echo
 for i in 1 2 3 ; do  # for setting up 3 attempts
@@ -350,7 +355,7 @@ if [[ "$passwd" != "" ]]; then
    if [ "$passwd" != "$OTP" ];then
       if [ "$passwd" == "$master_key" ] ;then
          echo "$bold $grn Access Granted !$rst"
-         [[ "$mailkey" == "1" ]] && inform_user
+         inform_user
          #clear;header
          break
       else
@@ -359,7 +364,7 @@ if [[ "$passwd" != "" ]]; then
       fi
    else
       echo "$bold $grn Access Granted ! $rst"
-      [[ "$mailkey" == "1" ]] && inform_user
+      inform_user
       #clear;header
       break
    fi
@@ -430,7 +435,7 @@ bash $ipath/src/set_user_profile.sh $profilekey
 ;;
 --update-profile)
 bash $ipath/src/update_user_profile.sh
-[[ "$mailkey" == "1" ]] && update_user
+update_user
 #print_close
 ;;
 --reset-masterkey|-rmk)
