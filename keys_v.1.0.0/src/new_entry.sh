@@ -77,7 +77,8 @@ fi
 echo;echo "$bold$ylw New Entry : $rst"
 while true;do
 echo
-last_updated=$(date +"%D ")
+#last_updated=$(date +"%D ")
+last_updated=$(date '+%d-%m-%Y')
 #print_welcome
 while true;do
 read -p "$bold$pur   Nickname: $rst" nickname

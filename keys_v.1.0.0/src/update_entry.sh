@@ -51,7 +51,8 @@ EOF
 #-------------------------------------------------#
 # Decrypt the database before using
 bash $ipath/src/encrypt.sh -dd $database
-last_updated=$(date +"%D ")
+#last_updated=$(date +"%D ")
+last_updated=$(date '+%d-%m-%Y')
 echo
 read -p "$bold$pur  Enter nickname:$rst" nickname
 a=`grep " $nickname:" $database`
